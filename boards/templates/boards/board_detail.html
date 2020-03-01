@@ -1,0 +1,14 @@
+{% extends 'boards/base.html' %}
+{% block title %}
+    tegami » {{ object.name }}
+{% endblock title %}
+{% block body %}
+    <h1>{{ object.name }}</h1>
+
+    {% for thread in threads %}
+        <div class="thread-listing">
+            <div class="message">{{ thread.message }}</div>
+        </div>
+        <hr>
+    {% endfor %}
+{% endblock body %}

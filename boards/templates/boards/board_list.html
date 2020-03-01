@@ -1,0 +1,14 @@
+{% extends 'boards/base.html' %}
+{% block title %}
+    tegami » boards
+{% endblock title %}
+{% block body %}
+    <h1>tegami</h1>
+
+    {% for board in object_list %}
+        <div class="board-listing">
+            <div class="label"><a href={% url 'board' board.slug %}>{{ board.name }}</a></div>
+            <div class="description">{{ board.description }}</div>
+        </div>
+    {% endfor %}
+{% endblock body %}
