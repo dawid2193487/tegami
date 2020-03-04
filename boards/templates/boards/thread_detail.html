@@ -1,0 +1,32 @@
+{% extends 'boards/base.html' %}
+{% block title %}
+    tegami » {{ object.board.name }} » {{ object.name }}
+{% endblock title %}
+{% block body %}
+    <h1>{{ object.name }}</h1>
+    <div class="thread-listing">
+        <div class="meta">
+            <span class="posted_by">{{ thread.posted_by|default:"Anonymous" }}</span>
+            <span class="posted_on">{{ thread.posted_on }}</span>
+        </div>
+        <div class="message">{{ thread.message }}</div>
+    </div>
+    <hr>
+    {% for reply in replies %}
+        <div class="reply-listing">
+            <div class="meta">
+                <span class="posted_by">{{ reply.posted_by|default:"Anonymous" }}</span>
+                <span class="posted_on">{{ reply.posted_on }}</span>
+            </div>
+            <div class="message">{{ reply.message }}</div>
+        </div>
+        <hr>
+    {% endfor %}
+    <div class="reply-form">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {{ reply_form }}
+            <input type="submit" value="Send">
+        </form>
+    </div>
+{% endblock body %}

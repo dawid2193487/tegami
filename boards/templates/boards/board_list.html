@@ -7,7 +7,7 @@
 
     {% for board in object_list %}
         <div class="board-listing">
-            <div class="label"><a href={% url 'board' board.slug %}>{{ board.name }}</a></div>
+            <div class="label"><a href="{% url 'board' board.slug %}"">{{ board.name }}</a></div>
             <div class="description">{{ board.description }}</div>
         </div>
     {% endfor %}

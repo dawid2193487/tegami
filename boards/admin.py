@@ -4,8 +4,13 @@ from .models import *
 # Register your models here.
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
-    pass
+    prepopulated_fields = { 'slug': ('name', )}
+    readonly_fields = ('created_on',)
 
 @admin.register(Thread)
 class ThreadAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('posted_on',)
+
+@admin.register(Reply)
+class ReplyAdmin(admin.ModelAdmin):
+    readonly_fields = ('posted_on',)

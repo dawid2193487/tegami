@@ -20,5 +20,6 @@ import boards.views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', boards.views.BoardList.as_view(), name="board-list"),
-    path('<slug>/', boards.views.Board.as_view(), name="board")
+    path('<slug>/', boards.views.BoardView.as_view(), name="board"),
+    path('<slug:board>/<pk>/', boards.views.ThreadView.as_view(), name="thread")
 ]

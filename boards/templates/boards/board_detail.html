@@ -4,9 +4,21 @@
 {% endblock title %}
 {% block body %}
     <h1>{{ object.name }}</h1>
+    <div class="thread-form">
+        <form action="." method="POST">
+            {% csrf_token %}
+            {{ thread_form }}
+            <input type="submit" value="Send">
+        </form>
+    </div>
 
     {% for thread in threads %}
         <div class="thread-listing">
+            <div class="meta">
+                <span class="posted_by">{{ thread.posted_by|default:"Anonymous" }}</span>
+                <span class="posted_on">{{ thread.posted_on }}</span>
+                <span class="open"><a href="{% url 'thread' board=object.slug pk=thread.pk %}">[Open]</a></span>
+            </div>
             <div class="message">{{ thread.message }}</div>
         </div>
         <hr>
