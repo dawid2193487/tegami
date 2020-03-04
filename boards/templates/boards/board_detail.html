@@ -5,7 +5,7 @@
 {% block body %}
     <h1>{{ object.name }}</h1>
     <div class="thread-form">
-        <form action="." method="POST">
+        <form action="." method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ thread_form }}
             <input type="submit" value="Send">

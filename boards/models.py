@@ -1,6 +1,8 @@
 from django.db import models
 from django.utils.text import slugify 
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from attach.models import Attachement
 
 # Create your models here.
 class Board(models.Model):
@@ -21,6 +23,7 @@ class Thread(models.Model):
     message = models.TextField(verbose_name="Message", max_length=6000)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     posted_on = models.DateTimeField(auto_now_add=True)
+    attachements = GenericRelation(Attachement)
 
     def __str__(self):
         return f'{self.board.name} » {self.message[:100]}'
@@ -30,6 +33,7 @@ class Reply(models.Model):
     message = models.TextField(verbose_name="Message", max_length=6000)
     reply_in = models.ForeignKey(Thread, on_delete=models.CASCADE)
     posted_on = models.DateTimeField(auto_now_add=True)
+    attachements = GenericRelation(Attachement)
 
     class Meta:
         verbose_name_plural = "Replies"

@@ -15,12 +15,12 @@ class BoardView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["threads"] = self.object.thread_set.all()
-        context["thread_form"] = ThreadForm()
+        context["thread_form"] = ResponseForm()
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = ThreadForm(request.POST)
+        form = ResponseForm(request.POST)
         if form.is_valid():
             message = form.cleaned_data["message"]
             t = Thread.objects.create(posted_by=request.user, message=message, board=self.object)
@@ -45,15 +45,16 @@ class ThreadView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["replies"] = self.object.reply_set.all()
-        context["reply_form"] = ReplyForm()
+        context["reply_form"] = ResponseForm()
         return context
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = ReplyForm(request.POST)
+        form = ResponseForm(request.POST, request.FILES)
         if form.is_valid():
             message = form.cleaned_data["message"]
-            Reply.objects.create(posted_by=request.user, message=message, reply_in=self.object)
+            r = Reply.objects.create(posted_by=request.user, message=message, reply_in=self.object)
+            form.save_attachements(r)
         else:
             messages.add_message(request, messages.ERROR, "Invalid form.")
         

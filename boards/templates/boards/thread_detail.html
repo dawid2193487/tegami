@@ -1,15 +1,14 @@
 {% extends 'boards/base.html' %}
 {% block title %}
-    tegami » {{ object.board.name }} » {{ object.name }}
+    tegami » {{ object.board.name }} » {{ object.message }}
 {% endblock title %}
 {% block body %}
-    <h1>{{ object.name }}</h1>
     <div class="thread-listing">
         <div class="meta">
-            <span class="posted_by">{{ thread.posted_by|default:"Anonymous" }}</span>
-            <span class="posted_on">{{ thread.posted_on }}</span>
+            <span class="posted_by">{{ object.posted_by|default:"Anonymous" }}</span>
+            <span class="posted_on">{{ object.posted_on }}</span>
         </div>
-        <div class="message">{{ thread.message }}</div>
+        <div class="message">{{ object.message }}</div>
     </div>
     <hr>
     {% for reply in replies %}
@@ -23,7 +22,7 @@
         <hr>
     {% endfor %}
     <div class="reply-form">
-        <form action="." method="POST">
+        <form action="." method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ reply_form }}
             <input type="submit" value="Send">
