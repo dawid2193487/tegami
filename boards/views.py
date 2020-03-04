@@ -20,10 +20,11 @@ class BoardView(DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        form = ResponseForm(request.POST)
+        form = ResponseForm(request.POST, request.FILES)
         if form.is_valid():
             message = form.cleaned_data["message"]
             t = Thread.objects.create(posted_by=request.user, message=message, board=self.object)
+            form.save_attachements(t)
             return redirect("thread", board=self.object.slug, pk=t.pk)
         else:
             messages.add_message(request, messages.ERROR, "Invalid form.")

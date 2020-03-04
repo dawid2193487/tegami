@@ -19,7 +19,18 @@
                 <span class="posted_on">{{ thread.posted_on }}</span>
                 <span class="open"><a href="{% url 'thread' board=object.slug pk=thread.pk %}">[Open]</a></span>
             </div>
-            <div class="message">{{ thread.message }}</div>
+            <div class="message">
+                {% if thread.attachements.count %}
+                    <div class="attachements">
+                        <ul>
+                        {% for attachement in thread.attachements.all %}
+                            <li><a href="{{ attachement.upload.url }}">{{ attachement.upload.name }}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                {{ thread.message }}
+            </div>
         </div>
         <hr>
     {% endfor %}
