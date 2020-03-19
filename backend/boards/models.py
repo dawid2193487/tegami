@@ -25,6 +25,10 @@ class Thread(models.Model):
     posted_on = models.DateTimeField(auto_now_add=True)
     attachements = GenericRelation(Attachement)
 
+    @property
+    def channel_id(self):
+        return f"thread_{self.pk}"
+
     def __str__(self):
         return f'{self.board.name} » {self.message[:100]}'
 

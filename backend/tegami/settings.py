@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'channels',
     'boards',
     'attach',
 ]
@@ -69,9 +70,17 @@ TEMPLATES = [
     },
 ]
 
-
-
 WSGI_APPLICATION = 'tegami.wsgi.application'
+
+ASGI_APPLICATION = 'tegami.routing.application'
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 
 # Database
