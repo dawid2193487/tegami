@@ -5,6 +5,7 @@ from channels.exceptions import StopConsumer
 from asgiref.sync import async_to_sync
 
 from .models import Thread
+from .serializers import ThreadSerializer, ReplySerializer
 
 class InvalidParameters(Exception):
     pass
@@ -37,18 +38,26 @@ class AccessConsumer(JsonWebsocketConsumer):
             "profile": model_to_dict(profile),
         })
 
+    def tegami_get_replies(self, content):
+        thread = Thread.objects.get(pk=content["pk"])
+        replies = [ ReplySerializer(reply).data for reply in thread.reply_set.all() ]
+        self.send_json({
+            "type": "reply_list",
+            "replies": replies,
+        })
+
 class ThreadConsumer(AccessConsumer):
 
     def connect(self):
         self.accept()
         thread = Thread.objects.get(pk=self.scope["url_route"]["kwargs"]["thread_id"])
-        replies = [ model_to_dict(reply) for reply in thread.reply_set.all() ]
+        replies = [ ReplySerializer(reply).data for reply in thread.reply_set.all() ]
         self.chan_id = thread.channel_id
         async_to_sync(self.channel_layer.group_add)(self.chan_id, self.channel_name)
 
         self.send_json({
             "type": "thread_init",
-            "thread": model_to_dict(thread),
+            "thread": ThreadSerializer(thread).data,
             "replies": replies
         })
 
