@@ -6,6 +6,7 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 from .models import Reply
+from .serializers import ThreadSerializer, ReplySerializer
 
 @receiver(post_save, sender=Reply)
 def reply_broadcast(sender, instance, **kwargs):
@@ -13,5 +14,5 @@ def reply_broadcast(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     async_to_sync(channel_layer.group_send)(chan_id, {
         "type": "new_reply",
-        "reply": model_to_dict(instance), 
+        "reply": ReplySerializer(instance).data, 
     })
