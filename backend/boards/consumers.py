@@ -40,7 +40,7 @@ class AccessConsumer(JsonWebsocketConsumer):
 
     def tegami_get_replies(self, content):
         thread = Thread.objects.get(pk=content["pk"])
-        replies = [ ReplySerializer(reply).data for reply in thread.reply_set.all() ]
+        replies = ReplySerializer(thread.reply_set.all(), many=True).data
         self.send_json({
             "type": "reply_list",
             "replies": replies,
@@ -51,7 +51,7 @@ class ThreadConsumer(AccessConsumer):
     def connect(self):
         self.accept()
         thread = Thread.objects.get(pk=self.scope["url_route"]["kwargs"]["thread_id"])
-        replies = [ ReplySerializer(reply).data for reply in thread.reply_set.all() ]
+        replies = ReplySerializer(thread.reply_set.all(), many=True).data
         self.chan_id = thread.channel_id
         async_to_sync(self.channel_layer.group_add)(self.chan_id, self.channel_name)
 
