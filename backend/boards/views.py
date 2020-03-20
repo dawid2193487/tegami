@@ -14,7 +14,7 @@ class BoardView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["threads"] = self.object.thread_set.all().order_by("-posted_on")
+        context["threads"] = self.object.thread_set.all().order_by("-posted_at")
         context["thread_form"] = ResponseForm()
         return context
 
@@ -45,7 +45,7 @@ class ThreadView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["replies"] = self.object.reply_set.all().order_by("-posted_on")
+        context["replies"] = self.object.reply_set.all().order_by("posted_at")
         context["reply_form"] = ResponseForm()
         return context
 

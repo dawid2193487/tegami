@@ -16,7 +16,7 @@
         <div class="thread-listing">
             <div class="meta">
                 <span class="posted_by">{{ thread.posted_by|default:"Anonymous" }}</span>
-                <span class="posted_on">{{ thread.posted_on }}</span>
+                <span class="posted_on">{{ thread.posted_at }}</span>
                 <span class="open"><a href="{% url 'thread' board=object.slug pk=thread.pk %}">[Open]</a></span>
             </div>
             <div class="message">

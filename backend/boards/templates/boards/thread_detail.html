@@ -6,7 +6,7 @@
     <div class="thread-listing">
         <div class="meta">
             <span class="posted_by">{{ object.posted_by|default:"Anonymous" }}</span>
-            <span class="posted_on">{{ object.posted_on }}</span>
+            <span class="posted_on">{{ object.posted_at }}</span>
         </div>
         <div class="message">
         {% if object.attachements.count %}
@@ -26,7 +26,7 @@
         <div class="reply-listing">
             <div class="meta">
                 <span class="posted_by">{{ reply.posted_by|default:"Anonymous" }}</span>
-                <span class="posted_on">{{ reply.posted_on }}</span>
+                <span class="posted_on">{{ reply.posted_at }}</span>
             </div>
             <div class="message">
                 {% if reply.attachements.count %}
