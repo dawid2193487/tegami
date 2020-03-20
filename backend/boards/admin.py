@@ -5,12 +5,12 @@ from .models import *
 @admin.register(Board)
 class BoardAdmin(admin.ModelAdmin):
     prepopulated_fields = { 'slug': ('name', )}
-    readonly_fields = ('created_on',)
+    readonly_fields = ('created_at',)
 
 @admin.register(Thread)
 class ThreadAdmin(admin.ModelAdmin):
-    readonly_fields = ('posted_on',)
+    readonly_fields = ('posted_at',)
 
 @admin.register(Reply)
 class ReplyAdmin(admin.ModelAdmin):
-    readonly_fields = ('posted_on',)
+    readonly_fields = ('posted_at',)

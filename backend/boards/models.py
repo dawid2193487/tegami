@@ -9,7 +9,7 @@ class Board(models.Model):
     name = models.CharField(verbose_name="Name", max_length=20)
     description = models.CharField(verbose_name="Description", max_length=255)
     slug = models.SlugField(max_length=20)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -22,7 +22,7 @@ class Thread(models.Model):
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     message = models.TextField(verbose_name="Message", max_length=6000)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    posted_on = models.DateTimeField(auto_now_add=True)
+    posted_at = models.DateTimeField(auto_now_add=True)
     attachements = GenericRelation(Attachement)
 
     @property
@@ -36,7 +36,7 @@ class Reply(models.Model):
     posted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True)
     message = models.TextField(verbose_name="Message", max_length=6000)
     reply_in = models.ForeignKey(Thread, on_delete=models.CASCADE)
-    posted_on = models.DateTimeField(auto_now_add=True)
+    posted_at = models.DateTimeField(auto_now_add=True)
     attachements = GenericRelation(Attachement)
 
     class Meta:
