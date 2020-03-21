@@ -23,47 +23,51 @@ class AccessConsumer(JsonWebsocketConsumer):
         if func is None:
             self.send_json({
                 "type": "no_such_call",
+                "nonce": content["nonce"],
                 "call_copy": content
             })
             return
 
         try:
-            func(content)
+            response = func(content)
+            response["nonce"] = content["nonce"]
+            self.send_json(response)
         except (InvalidParameters, KeyError):
             self.send_json({
                 "type": "invalid_call",
+                "nonce": content["nonce"],
                 "call_copy": content
             })
 
     def tegami_board_list(self, content):
         boards = Board.objects.all()
-        self.send_json({
+        return {
             "type": "board_list",
             "boards": BoardSerializer(boards, many=True).data,
-        })
+        }
 
     def tegami_board_detail(self, content):
         board = Board.objects.get(pk=content["pk"])
-        self.send_json({
+        return {
             "type": "board_detail",
             "board": BoardSerializer(board).data,
-        })
+        }
     
     def tegami_thread_list(self, content):
         board = Board.objects.get(pk=content["pk"])
         threads = ThreadSerializer(board.thread_set.all(), many=True).data
-        self.send_json({
+        return {
             "type": "thread_list",
             "board": BoardSerializer(board).data,
             "threads": threads,
-        })
+        }
 
     def tegami_thread_detail(self, content):
         thread = Thread.objects.get(pk=content["pk"])
-        self.send_json({
+        return {
             "type": "thread_detail",
             "thread": ThreadSerializer(thread).data,
-        })
+        }
 
     def tegami_watch_thread(self, content):
         thread = Thread.objects.get(pk=content["pk"])
@@ -71,22 +75,26 @@ class AccessConsumer(JsonWebsocketConsumer):
             async_to_sync(self.channel_layer.group_discard)(self.watched_thread, self.channel_name)
         self.watched_thread = thread.channel_id
         async_to_sync(self.channel_layer.group_add)(self.watched_thread, self.channel_name)
+        return {
+            "type": "thread_watched_ok"
+        }
 
     def tegami_reply_list(self, content):
         thread = Thread.objects.get(pk=content["pk"])
         replies = ReplySerializer(thread.reply_set.all(), many=True).data
-        self.send_json({
+        return {
             "type": "reply_list",
             "replies": replies,
-        })
+        }
 
     def tegami_profile_detail(self, content):
         user = get_user_model().objects.get(pk=content["pk"])
         profile = user.profile
-        self.send_json({
+        return {
             "type": "profile_detail",
             "profile": ProfileSerializer(profile).data,
-        })
+        }
+
     # def tegami_unwatch_thread(self, content):
     #     thread = Thread.objects.get(pk=content["pk"])
     #     self.chan_id = thread.channel_id
