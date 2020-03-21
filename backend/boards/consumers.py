@@ -54,6 +54,7 @@ class AccessConsumer(JsonWebsocketConsumer):
         threads = ThreadSerializer(board.thread_set.all(), many=True).data
         self.send_json({
             "type": "thread_list",
+            "board": BoardSerializer(board).data,
             "threads": threads,
         })
 

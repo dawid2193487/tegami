@@ -28,6 +28,7 @@ export default {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    {src: '~plugins/native-websocket.js', ssr: false}
   ],
   /*
   ** Nuxt.js dev-modules

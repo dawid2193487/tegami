@@ -4,7 +4,7 @@ from .models import Reply, Thread, Board
 class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ['name', 'description', 'slug', 'created_at']
+        fields = ['pk', 'name', 'description', 'slug', 'created_at']
 
 class ThreadSerializer(serializers.ModelSerializer):
     class Meta:
