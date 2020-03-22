@@ -1,25 +1,28 @@
 <template>
   <div class="container">
-    <div class="thread">
+    <div class="thread box" v-if="ready">
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="thread.posted_by"/></span>
         &bull;
         <span class="date">{{thread.posted_at}}</span>
       </div>
       <div class="message">{{thread.message}}</div>
+      <Replies :reply_set="thread.reply_set"/>
     </div>
-    <Replies :pk="thread.pk"/>
+    <div class="thread box loading" v-else-if="loading">
+      Loading...
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.thread {
-  background-color: rgb(255, 255, 255);
-  padding: 0.5em;
-  box-shadow: 0px 1px 1px var(--shadow);
-  transition: box-shadow 0.05s ease-in-out;
-  max-width: 800px;
-}
+// .thread {
+//   background-color: rgb(255, 255, 255);
+//   padding: 0.5em;
+//   box-shadow: 0px 1px 2px var(--shadow);
+//   transition: box-shadow 0.05s ease-in-out;
+//   max-width: 800px;
+// }
 </style>
 
 <script>

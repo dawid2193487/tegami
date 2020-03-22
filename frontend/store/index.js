@@ -26,35 +26,35 @@ const response_handlers = {
     },
 
     thread_list (state, payload) {
-        state.boards = { ...state.boards, [payload.board.pk]: payload.board };
+        // state.boards = { ...state.boards, [payload.board.pk]: payload.board };
 
-        for (let thread of payload.threads) {
-            state.threads = {...state.threads, [thread.pk]: {...state.threads[thread.pk], ...thread }};
-        }
+        // for (let thread of payload.threads) {
+        //     state.threads = {...state.threads, [thread.pk]: {...state.threads[thread.pk], ...thread }};
+        // }
 
-        const pks = payload.threads.map((thread) => thread.pk);
+        // const pks = payload.threads.map((thread) => thread.pk);
 
-        for (let pk of pks) {
-            state.boards[payload.board.pk] = 
-                {
-                    ...state.boards[payload.board.pk], 
-                    threads: { ...state.boards[payload.board.pk].threads, [pk]: pk }
-                };
-        }
+        // for (let pk of pks) {
+        //     state.boards[payload.board.pk] = 
+        //         {
+        //             ...state.boards[payload.board.pk], 
+        //             threads: { ...state.boards[payload.board.pk].threads, [pk]: pk }
+        //         };
+        // }
     },
 
     thread_detail (state, payload) {
         state.threads = {...state.threads, [payload.thread.pk]: { ...state.threads[payload.thread.pk], ...payload.thread } };
-        state.boards[payload.thread.board] = 
-            {
-                ...state.boards[payload.thread.board], 
-                threads: { ...state.boards[payload.thread.board].threads, [payload.thread.pk]: payload.thread.pk }
-            };
+        // state.boards[payload.thread.board] = 
+        //     {
+        //         ...state.boards[payload.thread.board], 
+        //         threads: { ...state.boards[payload.thread.board].threads, [payload.thread.pk]: payload.thread.pk }
+        //     };
     },
 
     reply_list (state, payload) {
         //console.log(payload);
-        for (let reply of payload.replies) {
+        /*for (let reply of payload.replies) {
             state.replies = {...state.replies, [reply.pk]: reply };
         }
 
@@ -74,7 +74,7 @@ const response_handlers = {
                     ...state.threads[payload.thread.pk], 
                     replies: { ...state.threads[payload.thread.pk].replies, [pk]: pk }
                 };
-        }
+        }*/
     },
 
     reply_detail (state, payload) {
@@ -85,10 +85,10 @@ const response_handlers = {
                 ...payload.reply 
             } 
         };
-        state.threads[payload.reply.reply_to] = {
-            ...state.threads[payload.reply.reply_to], 
-            replies: { ...state.threads[payload.reply.reply_to].replies, [payload.reply.pk]: payload.reply.pk }
-        };
+        // state.threads[payload.reply.reply_to] = {
+        //     ...state.threads[payload.reply.reply_to], 
+        //     replies: { ...state.threads[payload.reply.reply_to].replies, [payload.reply.pk]: payload.reply.pk }
+        // };
     },
 
     profile_detail (state, payload) {

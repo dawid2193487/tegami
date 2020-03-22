@@ -5,7 +5,9 @@
   </div>
 </template>
 
-<style>
+<style type="scss">
+
+@import url('~/assets/global_style.scss');
 html {
   font-family: 'Arial', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;

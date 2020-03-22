@@ -1,32 +1,25 @@
 <template>
   <div class="container">
-      <Reply v-for="pk in replies_pks" :key="pk" :pk="pk"/>
+    <div v-if="expanded" class="replies">
+      <div class="expander box link stick interact" v-if="hidden_amount > 0" @click="expanded = false">
+        Collapse {{ hidden_amount }} replies.
+      </div>
+      <Reply v-for="pk in reply_set" :key="pk" :pk="pk"/>
+    </div>
+    <div v-else class="replies">
+      <div class="expander box link interact" v-if="hidden_amount > 0" @click="expanded = true">
+        Load {{ hidden_amount }} more replies.
+      </div>
+      <Reply v-for="pk in latest" :key="pk" :pk="pk"/>
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.thread {
-  background-color: rgb(255, 255, 255);
-  padding: 0.5em;
-  box-shadow: 0px 1px 1px var(--shadow);
-  transition: box-shadow 0.05s ease-in-out;
-  max-width: 800px;
+.replies {
+  margin-top: 5px;
 }
 
-.board_tile:hover {
-  box-shadow: 0px 3px 1px var(--half-shadow);
-}
-
-.title {
-  font-size: 200%;
-  a {
-    color: black;
-    font-weight: bold;
-  }
-}
-.description {
-  margin-top: 0.4em;
-}
 </style>
 
 <script>
@@ -34,40 +27,21 @@ import { mapActions } from 'vuex';
 import ProfilePreview from "~/components/ProfilePreview";
 import Reply from "~/components/Reply";
 
+const PREVIEW_REPLIES = 3;
+
 export default {
   components: { ProfilePreview, Reply },
-  props: ["pk"],
-  data: () => { return {
-    request_nonce: null,
+  props: ["reply_set"],
+  data: () => {return {
+    expanded: false,
   }},
-  methods: {
-    ...mapActions(['reply_list'])
-  },
   computed: {
-    replies_pks() {
-      return this.$store.state.threads[this.pk].replies || {};
+    latest() {
+      return this.reply_set.slice(-PREVIEW_REPLIES)
     },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete" || this.pk == null;
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
+    hidden_amount() {
+      return Math.max(this.reply_set.length - PREVIEW_REPLIES, 0);
     }
-  },
-  mounted () {
-    if (this.pk == null) {
-      return;
-    }
-
-    this.reply_list(this.pk).then((nonce) => {
-      this.request_nonce = nonce;
-    });
   }
 }
 </script>

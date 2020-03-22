@@ -1,0 +1,21 @@
+.box {
+    background-color: rgb(255, 255, 255);
+    padding: 0.5em;
+    box-shadow: 0px 1px 2px var(--shadow);
+    transition: box-shadow 0.05s ease-in-out;
+    max-width: 800px;
+    margin-top: 1px;
+}
+
+.stick {
+    position: sticky;
+    top: 5px;
+}
+
+.interact {
+    transition: box-shadow 0.2s ease-out;
+}
+
+.interact:hover {
+    box-shadow: 0px 2px 5px var(--shadow) !important;
+}

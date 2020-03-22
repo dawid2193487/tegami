@@ -4,12 +4,12 @@ from .models import Reply, Thread, Board
 class BoardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Board
-        fields = ['pk', 'name', 'description', 'slug', 'created_at']
+        fields = ['pk', 'name', 'description', 'slug', 'created_at', 'thread_set']
 
 class ThreadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Thread
-        fields = ['pk', 'posted_by', 'message', 'board', 'posted_at']
+        fields = ['pk', 'posted_by', 'message', 'board', 'posted_at', 'reply_set']
 
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:

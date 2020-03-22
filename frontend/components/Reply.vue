@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="reply">
+    <div class="reply box" v-if="ready">
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="reply.posted_by"/></span>
         &bull;
@@ -8,18 +8,21 @@
       </div>
       <div class="message">{{reply.message}}</div>
     </div>
+    <div class="reply box" v-else-if="loading">
+      Loading...
+    </div>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.reply {
-  background-color: rgb(255, 255, 255);
-  padding: 0.5em;
-  box-shadow: 0px 1px 1px var(--shadow);
-  transition: box-shadow 0.05s ease-in-out;
-  max-width: 800px;
-  margin-top: 1px;
-}
+// .reply {
+//   background-color: rgb(255, 255, 255);
+//   padding: 0.5em;
+//   box-shadow: 0px 1px 2px var(--shadow);
+//   transition: box-shadow 0.05s ease-in-out;
+//   max-width: 800px;
+//   margin-top: 1px;
+// }
 
 </style>
 

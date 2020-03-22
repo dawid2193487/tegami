@@ -2,7 +2,7 @@
   <div class="container">
     <BoardHeader :board="board"/>
     <div class="threads" v-if="ready">
-      <Thread class="thread_container" v-for="pk in board.threads" :pk="pk" :key="pk"/>
+      <Thread class="thread_container" v-for="pk in board.thread_set" :pk="pk" :key="pk"/>
     </div>
   </div>
 </template>
@@ -47,10 +47,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['thread_list'])
+    ...mapActions(['board_detail'])
   },
   mounted () {
-    this.thread_list(this.$route.params.pk).then((nonce) => {
+    this.board_detail(this.$route.params.pk).then((nonce) => {
       this.request_nonce = nonce;
     });
   }

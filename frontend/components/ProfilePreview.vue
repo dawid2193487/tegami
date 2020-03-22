@@ -59,10 +59,12 @@ export default {
   },
   mounted () {
     if (this.pk == null) {
+      console.log("pk null")
       return;
     }
-
+    console.log("sending request");
     this.profile_detail(this.pk).then((nonce) => {
+      console.log("profile detail request sent!")
       this.request_nonce = nonce;
     });
   }
