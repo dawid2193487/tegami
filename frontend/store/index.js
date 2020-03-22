@@ -132,6 +132,9 @@ export const actions = {
     watch_thread (store, pk) {
         return send_event(store, "watch_thread", {pk: pk});
     },
+    watch_board (store, pk) {
+        return send_event(store, "watch_board", {pk: pk});
+    },
     profile_detail (store, pk) {
         return send_event(store, "profile_detail", {pk: pk});
     },

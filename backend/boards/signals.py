@@ -13,16 +13,18 @@ from .consumers import AccessConsumer
 def reply_broadcast(sender, instance, **kwargs):
     channel_layer = get_channel_layer()
     
+    board_chan_id = instance.reply_in.board.channel_id
+    async_to_sync(channel_layer.group_send)(board_chan_id, {
+        "type": "broadcast_board",
+        "pk": instance.reply_in.board.pk
+    })
+    
     thread_chan_id = instance.reply_in.channel_id
     async_to_sync(channel_layer.group_send)(thread_chan_id, {
         "type": "broadcast_thread",
         "pk": instance.reply_in.pk
     })
-    print(f"sent thread update to {thread_chan_id}");
-
-    print("sending board update");
-    board_chan_id = instance.reply_in.board.channel_id
     async_to_sync(channel_layer.group_send)(board_chan_id, {
-        "type": "broadcast_board",
-        "pk": instance.reply_in.board.pk
+        "type": "broadcast_thread",
+        "pk": instance.reply_in.pk
     })

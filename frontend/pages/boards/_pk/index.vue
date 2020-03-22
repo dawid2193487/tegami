@@ -28,6 +28,7 @@ export default {
   components: { BoardHeader, Thread },
   data: () => { return {
     request_nonce: null,
+    subscription_nonce: null,
   }},
   computed: {
     board() {
@@ -47,11 +48,14 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['board_detail'])
+    ...mapActions(['board_detail', 'watch_board'])
   },
   mounted () {
     this.board_detail(this.$route.params.pk).then((nonce) => {
       this.request_nonce = nonce;
+    });
+    this.watch_board(this.$route.params.pk).then((nonce) => {
+      this.subscription_nonce = nonce;
     });
   }
 }
