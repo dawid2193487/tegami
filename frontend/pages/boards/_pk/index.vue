@@ -1,18 +1,31 @@
 <template>
   <div class="container">
-    <div class="board_detail" v-if="ready">
-      <h1>{{ board.name }}</h1>
-      <div v-for="(thread, pk) in board.threads" :key="pk">
-        {{thread.message}}
-      </div>
+    <BoardHeader :board="board"/>
+    <div class="threads" v-if="ready">
+      <Thread class="thread_container" v-for="pk in board.threads" :pk="pk" :key="pk"/>
     </div>
   </div>
 </template>
 
+<style lang="scss" scoped>
+.threads {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.thread_container {
+  flex-basis: 100%;
+  margin: 10px;
+}
+</style>
+
 <script>
 import { mapActions } from 'vuex';
+import BoardHeader from "~/components/BoardHeader";
+import Thread from "~/components/Thread";
 
 export default {
+  components: { BoardHeader, Thread },
   data: () => { return {
     request_nonce: null,
   }},

@@ -1,19 +1,35 @@
 <template>
   <div class="container">
+    <h1> Boards </h1>
     <div v-if="ready" class="board_list">
-      <ul>
-        <li v-for="(board, pk) in boards" v-bind:key="pk">
-          <nuxt-link :to="{name: 'boards-pk', params: { pk: pk }}">{{ board.name }}</nuxt-link>
-        </li>
-      </ul>
+        <BoardTile class="board_listing" :pk="pk" v-for="(board, pk) in boards" v-bind:key="pk"/>
     </div>
   </div>
 </template>
 
+<style lang="scss" scoped>
+.container {
+  margin-top: 2em;
+  margin-left: 10vw;
+}
+
+.board_list {
+  display: flex;
+  width: 30vw;
+  flex-wrap: wrap;
+}
+.board_listing {
+  flex-basis: 100%;
+  margin-bottom: 10px;
+}
+</style>
+
 <script>
 import { mapActions } from 'vuex';
+import BoardTile from '~/components/BoardTile.vue';
 
 export default {
+  components: {BoardTile},
   data: () => { return {
     request_nonce: null,
   }},

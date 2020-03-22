@@ -84,7 +84,15 @@ class AccessConsumer(JsonWebsocketConsumer):
         replies = ReplySerializer(thread.reply_set.all(), many=True).data
         return {
             "type": "reply_list",
+            "thread": ThreadSerializer(thread).data,
             "replies": replies,
+        }
+
+    def tegami_reply_detail(self, content):
+        reply = Reply.objects.get(pk=content["pk"])
+        return {
+            "type": "reply_detail",
+            "reply": ReplySerializer(reply).data,
         }
 
     def tegami_profile_detail(self, content):

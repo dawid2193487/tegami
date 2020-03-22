@@ -8,6 +8,9 @@ export const state = () => ({
         failed: false,
     },
     boards: {},
+    threads: {},
+    replies: {},
+    profiles: {},
     requests: {},
 })
 
@@ -23,18 +26,75 @@ const response_handlers = {
     },
 
     thread_list (state, payload) {
-        console.log(payload);
         state.boards = { ...state.boards, [payload.board.pk]: payload.board };
-        state.boards[payload.board.pk] = 
-            {
-                ...state.boards[payload.board.pk], 
-                threads: state.boards[payload.board.pk]["threads"] || {}
-            };
-    
+
         for (let thread of payload.threads) {
-            state.boards[payload.board.pk]["threads"] = {...state.boards[payload.board.pk]["threads"], [thread.pk]: thread };
+            state.threads = {...state.threads, [thread.pk]: {...state.threads[thread.pk], ...thread }};
         }
-    }
+
+        const pks = payload.threads.map((thread) => thread.pk);
+
+        for (let pk of pks) {
+            state.boards[payload.board.pk] = 
+                {
+                    ...state.boards[payload.board.pk], 
+                    threads: { ...state.boards[payload.board.pk].threads, [pk]: pk }
+                };
+        }
+    },
+
+    thread_detail (state, payload) {
+        state.threads = {...state.threads, [payload.thread.pk]: { ...state.threads[payload.thread.pk], ...payload.thread } };
+        state.boards[payload.thread.board] = 
+            {
+                ...state.boards[payload.thread.board], 
+                threads: { ...state.boards[payload.thread.board].threads, [payload.thread.pk]: payload.thread.pk }
+            };
+    },
+
+    reply_list (state, payload) {
+        //console.log(payload);
+        for (let reply of payload.replies) {
+            state.replies = {...state.replies, [reply.pk]: reply };
+        }
+
+        const pks = payload.replies.map((reply) => reply.pk);
+        console.log(state.threads[payload.thread.pk]);
+        state.threads[payload.thread.pk] = 
+            {
+                ...state.threads[payload.thread.pk], 
+                replies: {}
+            };
+        console.log(state.threads[payload.thread.pk]);
+
+        console.log(`Adding replies to thread ${payload.thread.pk}, pks: ${pks}`);
+        for (let pk of pks) {
+            state.threads[payload.thread.pk] = 
+                {
+                    ...state.threads[payload.thread.pk], 
+                    replies: { ...state.threads[payload.thread.pk].replies, [pk]: pk }
+                };
+        }
+    },
+
+    reply_detail (state, payload) {
+        state.replies = {
+            ...state.replies, 
+            [payload.reply.pk]: { 
+                ...state.replies[payload.reply.pk], 
+                ...payload.reply 
+            } 
+        };
+        state.threads[payload.reply.reply_to] = {
+            ...state.threads[payload.reply.reply_to], 
+            replies: { ...state.threads[payload.reply.reply_to].replies, [payload.reply.pk]: payload.reply.pk }
+        };
+    },
+
+    profile_detail (state, payload) {
+        state.profiles = {...state.profiles, [payload.profile.pk]: payload.profile };
+    },
+
 }
 
 function send_event({commit, state}, type, params) {
@@ -72,6 +132,15 @@ export const actions = {
     watch_thread (store, pk) {
         return send_event(store, "watch_thread", {pk: pk});
     },
+    profile_detail (store, pk) {
+        return send_event(store, "profile_detail", {pk: pk});
+    },
+    reply_list (store, pk) {
+        return send_event(store, "reply_list", {pk: pk});
+    },
+    reply_detail (store, pk) {
+        return send_event(store, "reply_detail", {pk: pk});
+    }
 }
 
 export const mutations = {
