@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'boards',
     'attach',
     'profiles',
+    'nonce',
 ]
 
 MIDDLEWARE = [
