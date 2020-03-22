@@ -11,6 +11,10 @@ class Board(models.Model):
     slug = models.SlugField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def channel_id(self):
+        return f"board_{self.pk}"
+
     def __str__(self):
         return self.name
 
@@ -41,6 +45,7 @@ class Reply(models.Model):
 
     class Meta:
         verbose_name_plural = "Replies"
+
 
     def __str__(self):
         return f'{self.reply_in.board.name} » {self.reply_in.message[:30]} » {self.message[:100]}'

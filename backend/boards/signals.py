@@ -7,12 +7,22 @@ from asgiref.sync import async_to_sync
 
 from .models import Reply
 from .serializers import ThreadSerializer, ReplySerializer
+from .consumers import AccessConsumer
 
 @receiver(post_save, sender=Reply)
 def reply_broadcast(sender, instance, **kwargs):
-    chan_id = instance.reply_in.channel_id
     channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(chan_id, {
-        "type": "new_reply",
-        "reply": ReplySerializer(instance).data, 
+    
+    thread_chan_id = instance.reply_in.channel_id
+    async_to_sync(channel_layer.group_send)(thread_chan_id, {
+        "type": "broadcast_thread",
+        "pk": instance.reply_in.pk
+    })
+    print(f"sent thread update to {thread_chan_id}");
+
+    print("sending board update");
+    board_chan_id = instance.reply_in.board.channel_id
+    async_to_sync(channel_layer.group_send)(board_chan_id, {
+        "type": "broadcast_board",
+        "pk": instance.reply_in.board.pk
     })

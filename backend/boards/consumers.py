@@ -14,6 +14,7 @@ class InvalidParameters(Exception):
 class AccessConsumer(JsonWebsocketConsumer):
     def connect(self):
         self.watched_thread = None
+        self.watched_board = None
         self.accept()
 
     def receive_json(self, content):
@@ -39,21 +40,24 @@ class AccessConsumer(JsonWebsocketConsumer):
                 "call_copy": content
             })
 
-    def tegami_board_list(self, content):
+    @staticmethod
+    def tegami_board_list(content):
         boards = Board.objects.all()
         return {
             "type": "board_list",
             "boards": BoardSerializer(boards, many=True).data,
         }
 
-    def tegami_board_detail(self, content):
+    @staticmethod
+    def tegami_board_detail(content):
         board = Board.objects.get(pk=content["pk"])
         return {
             "type": "board_detail",
             "board": BoardSerializer(board).data,
         }
     
-    def tegami_thread_list(self, content):
+    @staticmethod
+    def tegami_thread_list(content):
         board = Board.objects.get(pk=content["pk"])
         threads = ThreadSerializer(board.thread_set.all(), many=True).data
         return {
@@ -62,7 +66,8 @@ class AccessConsumer(JsonWebsocketConsumer):
             "threads": threads,
         }
 
-    def tegami_thread_detail(self, content):
+    @staticmethod
+    def tegami_thread_detail(content):
         thread = Thread.objects.get(pk=content["pk"])
         return {
             "type": "thread_detail",
@@ -76,10 +81,23 @@ class AccessConsumer(JsonWebsocketConsumer):
         self.watched_thread = thread.channel_id
         async_to_sync(self.channel_layer.group_add)(self.watched_thread, self.channel_name)
         return {
-            "type": "thread_watched_ok"
+            "type": "thread_watched_ok",
+            "thread": content["pk"],
         }
 
-    def tegami_reply_list(self, content):
+    def tegami_watch_board(self, content):
+        thread = Board.objects.get(pk=content["pk"])
+        if self.watched_board is not None:
+            async_to_sync(self.channel_layer.group_discard)(self.watched_board, self.channel_name)
+        self.watched_board = thread.channel_id
+        async_to_sync(self.channel_layer.group_add)(self.watched_board, self.channel_name)
+        return {
+            "type": "board_watched_ok",
+            "board": content["pk"]
+        }
+
+    @staticmethod
+    def tegami_reply_list(content):
         thread = Thread.objects.get(pk=content["pk"])
         replies = ReplySerializer(thread.reply_set.all(), many=True).data
         return {
@@ -88,20 +106,31 @@ class AccessConsumer(JsonWebsocketConsumer):
             "replies": replies,
         }
 
-    def tegami_reply_detail(self, content):
+    @staticmethod
+    def tegami_reply_detail(content):
         reply = Reply.objects.get(pk=content["pk"])
         return {
             "type": "reply_detail",
             "reply": ReplySerializer(reply).data,
         }
 
-    def tegami_profile_detail(self, content):
+    @staticmethod
+    def tegami_profile_detail(content):
         user = get_user_model().objects.get(pk=content["pk"])
         profile = user.profile
         return {
             "type": "profile_detail",
             "profile": ProfileSerializer(profile).data,
         }
+
+    def broadcast_thread(self, event):
+        thread_message = AccessConsumer.tegami_thread_detail({"pk": event["pk"]})
+        self.send_json(thread_message)
+
+    def broadcast_board(self, event):
+        board_message = AccessConsumer.tegami_board_detail({"pk": event["pk"]})
+        self.send_json(board_message)
+
 
     # def tegami_unwatch_thread(self, content):
     #     thread = Thread.objects.get(pk=content["pk"])
