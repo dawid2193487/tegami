@@ -7,6 +7,7 @@ from asgiref.sync import async_to_sync
 from .models import Thread, Reply, Board
 from .serializers import ThreadSerializer, ReplySerializer, BoardSerializer
 from profiles.serializers import ProfileSerializer
+from nonce.models import Nonce
 
 class InvalidParameters(Exception):
     pass
@@ -121,6 +122,20 @@ class AccessConsumer(JsonWebsocketConsumer):
         return {
             "type": "profile_detail",
             "profile": ProfileSerializer(profile).data,
+        }
+
+    def tegami_post_reply(self, content):
+        Nonce.check_used(content["nonce"])
+        thread = Thread.objects.get(pk=content["pk"])
+        reply = Reply.objects.create(
+            posted_by=self.scope["user"],
+            message=content["message"],
+            reply_in=thread
+        )
+        print("posted")
+        Nonce.stamp(content["nonce"])
+        return {
+            "type": "post_reply_ok",
         }
 
     def broadcast_thread(self, event):

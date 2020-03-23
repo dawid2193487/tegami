@@ -8,6 +8,7 @@
       </div>
       <div class="message">{{thread.message}}</div>
       <Replies :reply_set="thread.reply_set"/>
+      <Composer @send="reply"/>
     </div>
     <div class="thread box loading" v-else-if="loading">
       Loading...
@@ -29,15 +30,20 @@
 import { mapActions } from 'vuex';
 import ProfilePreview from "~/components/ProfilePreview";
 import Replies from "~/components/Replies";
+import Composer from "~/components/Composer";
 
 export default {
-  components: { ProfilePreview, Replies },
+  components: { ProfilePreview, Replies, Composer },
   props: ["pk"],
   data: () => { return {
     request_nonce: null,
   }},
   methods: {
-    ...mapActions(['thread_detail'])
+    ...mapActions(['thread_detail', 'post_reply']),
+    reply(message) {
+      console.log(`in reply: ${message}`);
+      this.post_reply({pk: this.thread.pk, message: message});
+    }
   },
   computed: {
     thread() {

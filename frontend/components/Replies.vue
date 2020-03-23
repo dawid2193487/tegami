@@ -42,6 +42,6 @@ export default {
     hidden_amount() {
       return Math.max(this.reply_set.length - PREVIEW_REPLIES, 0);
     }
-  }
+  },
 }
 </script>

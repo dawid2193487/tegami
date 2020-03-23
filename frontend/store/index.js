@@ -95,6 +95,10 @@ const response_handlers = {
         state.profiles = {...state.profiles, [payload.profile.pk]: payload.profile };
     },
 
+    post_reply_ok (state, payload) {
+
+    }
+
 }
 
 function send_event({commit, state}, type, params) {
@@ -143,6 +147,14 @@ export const actions = {
     },
     reply_detail (store, pk) {
         return send_event(store, "reply_detail", {pk: pk});
+    },
+    post_reply (store, {pk, message}) {
+        console.log("posting!");
+        console.log(`in action: ${message}`);
+        return send_event(store, "post_reply", {
+            pk: pk,
+            message: message,
+        });
     }
 }
 
@@ -159,12 +171,20 @@ export const mutations = {
     },
     SOCKET_ONERROR (state, event)  {
         console.error(state, event);
+        state.socket.failed = true;
     },
     // default handler called for all methods
     SOCKET_ONMESSAGE (state, message)  {
         const type = message["type"];
         const nonce = message["nonce"];
-        response_handlers[type](state, message);
+        const handler = response_handlers[type];
+        if (handler == undefined) {
+            state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.FAILED};
+            console.log(`unimplemented ${type}`);
+            console.log(message);
+            return;
+        }
+        handler(state, message);
         state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.COMPLETE};
     },
     SOCKET_RECONNECT(state, count) {

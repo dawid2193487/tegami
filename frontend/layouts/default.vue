@@ -1,6 +1,7 @@
 <template>
   <div>
     <nuxt v-if="connection_guard" />
+    <div class="fail" v-else-if="failed">Could not connect. Reload the page to try again.</div>
     <div v-else>Connecting...</div>
   </div>
 </template>
@@ -29,6 +30,14 @@ a {
   color: unset;
   text-decoration: underline;
 }
+
+.fail {
+  margin: 2em;
+  padding: 1em;
+  font-size: 200%;
+  border: 1px solid red;
+  border-radius: 5px;
+}
 </style>
 
 <script>
@@ -36,7 +45,10 @@ export default {
   computed: {
     connection_guard() {
       return this.$store.state.socket.connection_guard
-    }
+    },
+    failed() {
+      return this.$store.state.socket.failed
+    },
   }
 }
 </script>
