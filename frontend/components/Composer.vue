@@ -6,6 +6,7 @@
       <div class="navigation">
         <div class="interact button add send" @click="send">
           <font-awesome-icon icon="reply"/>
+          <span class="hint" v-if="hint">{{hint}}</span>
         </div>
         <div class="interact button close" @click="enabled=false">
           <font-awesome-icon icon="times"/>
@@ -15,6 +16,7 @@
     <div class="box navigation navmargin" v-else>
       <div class="interact button reply add" @click="enable">
         <font-awesome-icon icon="reply"/>
+        <span class="hint" v-if="hint">{{hint}}</span>
       </div>
     </div>
   </div>
@@ -31,6 +33,7 @@
 
 .navigation {
   display: flex;
+  align-items: center;
 
   .navmargin {
     padding: 10px;
@@ -67,6 +70,10 @@
   }
 }
 
+.hint {
+  margin-left: 5px;
+}
+
 </style>
 
 <script>
@@ -77,10 +84,16 @@ import Reply from "~/components/Reply";
 const PREVIEW_REPLIES = 3;
 
 export default {
+  props: ["text"],
   data: () => {return {
     message: "",
     enabled: false,
   }},
+  computed: {
+    hint() {
+      return this.text || "";
+    }
+  },
   methods: {
     send() {
       this.$emit('send', this.message);

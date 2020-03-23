@@ -132,10 +132,22 @@ class AccessConsumer(JsonWebsocketConsumer):
             message=content["message"],
             reply_in=thread
         )
-        print("posted")
         Nonce.stamp(content["nonce"])
         return {
             "type": "post_reply_ok",
+        }
+
+    def tegami_post_thread(self, content):
+        Nonce.check_used(content["nonce"])
+        board = Board.objects.get(pk=content["pk"])
+        thread = Thread.objects.create(
+            posted_by=self.scope["user"],
+            message=content["message"],
+            board=board
+        )
+        Nonce.stamp(content["nonce"])
+        return {
+            "type": "post_thread_ok",
         }
 
     def broadcast_thread(self, event):

@@ -185,6 +185,12 @@ export const actions = {
             pk: pk,
             message: message,
         });
+    },
+    post_thread(store, {pk, message}) {
+        return send_event(store, "post_thread", {
+            pk: pk,
+            message: message,
+        });
     }
 }
 

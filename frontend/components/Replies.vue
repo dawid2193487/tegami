@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div v-if="expanded && ready" class="replies">
-      <div class="expander box link stick interact" v-if="hidden_amount > 0" @click="expanded = false">
+      <div class="expander box link interact" v-if="hidden_amount > 0" @click="expanded = false">
         Collapse {{ hidden_amount }} replies.
       </div>
       <Reply v-for="pk in reply_set" :key="pk" :pk="pk"/>
@@ -19,7 +19,10 @@
 .replies {
   margin-top: 5px;
 }
-
+.expander {
+  position: sticky;
+  top: 0px;
+}
 </style>
 
 <script>

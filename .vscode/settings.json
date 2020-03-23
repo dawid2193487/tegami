@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "/home/dawid/.virtualenvs/tegami/bin/python"
+    "python.pythonPath": "/home/dawid/.virtualenvs/tegami/bin/python",
+    "git.ignoreLimitWarning": true
 }
