@@ -52,6 +52,11 @@
 
 
   textarea {
+    background-color: var(--background);
+    color: var(--color);
+    *::placeholder {
+      color: var(--color);
+    }
     flex-basis: 100%;
     font-family: Arial, Helvetica, sans-serif;
     border: unset;

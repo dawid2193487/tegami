@@ -7,7 +7,8 @@
 
 <style lang="scss" scoped>
 .board_header {
-  background-color: rgb(196, 67, 196);
+  background-color: var(--orange);
+  color: white;
   padding: 1em;
   box-shadow: 0px 1px 1px var(--shadow);
   transition: box-shadow 0.05s ease-in-out;

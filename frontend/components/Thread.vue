@@ -7,7 +7,7 @@
         <span class="date">{{thread.posted_at}}</span>
       </div>
       <div class="message">{{thread.message}}</div>
-      <Replies :reply_set="thread.reply_set"/>
+      <Replies :pk="pk" :reply_set="thread.reply_set"/>
       <Composer @send="reply"/>
     </div>
     <div class="thread box loading" v-else-if="loading">

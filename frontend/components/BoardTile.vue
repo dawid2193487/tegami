@@ -10,14 +10,11 @@
 <style lang="scss" scoped>
 .board_tile {
   padding: 1em;
+  color: white;
 }
 
 .title {
   font-size: 150%;
-  a {
-    color: black;
-    font-weight: bold;
-  }
 }
 .description {
   margin-top: 0.4em;
