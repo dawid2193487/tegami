@@ -1,3 +1,7 @@
+h1, h2, h3, h4, h5 {
+    margin: 0;
+}
+
 .box {
     background-color: rgb(255, 255, 255);
     padding: 0.5em;
@@ -48,4 +52,19 @@
     100%{
         background-color: var(--load);
     }
+}  
+.red {
+    background-color: var(--red);
+}
+.yellow {
+    background-color: var(--yellow);
+}
+.orange {
+    background-color: var(--orange);
+}
+.pumpkin {
+    background-color: var(--pumpkin);
+}
+.green {
+    background-color: var(--green);
 }

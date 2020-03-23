@@ -1,6 +1,6 @@
 <template>
     <nuxt-link :to="{name: 'boards-pk', params: { pk: pk }}">
-      <div class="box interact board_tile">
+      <div class="box interact yellow board_tile">
         <div class="title link">{{board.name}}</div>
         <div class="description">{{board.description}}</div>
       </div>
@@ -9,9 +9,7 @@
 
 <style lang="scss" scoped>
 .board_tile {
-  background-color: rgb(196, 67, 196);
   padding: 1em;
-  box-shadow: 0px 1px 1px var(--shadow);
 }
 
 .title {

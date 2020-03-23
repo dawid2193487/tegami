@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <h1> Boards </h1>
+    <div class="apptitle">Tegami</div>
+    <h1 class="title"> Boards </h1>
     <div v-if="ready" class="board_list">
         <BoardTile class="board_listing" :pk="pk" v-for="(board, pk) in boards" v-bind:key="pk"/>
     </div>
@@ -11,6 +12,14 @@
 .container {
   margin-top: 2em;
   margin-left: 10vw;
+}
+
+.apptitle {
+  opacity: 0.8;
+}
+
+.title {
+  margin-bottom: 0.5em;
 }
 
 .board_list {

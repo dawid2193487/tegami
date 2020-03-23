@@ -22,7 +22,6 @@ html {
   --green: #63ff75;
   --background: #ffffff;
   --load: #f0f0f0;
-  
 }
 
 body {
