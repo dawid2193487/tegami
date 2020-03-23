@@ -12,7 +12,29 @@ export const state = () => ({
     replies: {},
     profiles: {},
     requests: {},
-})
+});
+
+function copystamp(payload, target) {
+    target["nonce"] = payload["nonce"];
+    target["timestamp"] = payload["timestamp"];
+}
+
+const CACHE_DURATION = 25 * 1000;
+
+function cached(set, pk) {
+    const obj = set[pk];
+    if (obj == undefined) {
+        console.log("cache miss!")
+        return false;
+    }
+    const current = Date.now();
+    if (current - obj.timestamp < CACHE_DURATION) {
+        console.log("cache hit!");
+        return obj.nonce
+    }
+    console.log(`cache stale! ${current - obj.timestamp} old.`)
+    return false;
+}
 
 const response_handlers = {
     board_list (state, payload) {
@@ -22,6 +44,7 @@ const response_handlers = {
     },
 
     board_detail (state, payload) {
+        copystamp(payload, payload.board);
         state.boards = {...state.boards, [payload.board.pk]: payload.board };
     },
 
@@ -44,6 +67,7 @@ const response_handlers = {
     },
 
     thread_detail (state, payload) {
+        copystamp(payload, payload.thread);
         state.threads = {...state.threads, [payload.thread.pk]: { ...state.threads[payload.thread.pk], ...payload.thread } };
         // state.boards[payload.thread.board] = 
         //     {
@@ -78,6 +102,7 @@ const response_handlers = {
     },
 
     reply_detail (state, payload) {
+        copystamp(payload, payload.reply);
         state.replies = {
             ...state.replies, 
             [payload.reply.pk]: { 
@@ -92,6 +117,7 @@ const response_handlers = {
     },
 
     profile_detail (state, payload) {
+        copystamp(payload, payload.profile);
         state.profiles = {...state.profiles, [payload.profile.pk]: payload.profile };
     },
 
@@ -125,13 +151,14 @@ export const actions = {
         return send_event(store, "board_list", {});
     },
     board_detail (store, pk) {
-        return send_event(store, "board_detail", {pk: pk});
+        console.log(store.state.boards);
+        return cached(store.state.boards, pk) || send_event(store, "board_detail", {pk: pk});
     },
     thread_list (store, pk) {
         return send_event(store, "thread_list", {pk: pk});
     },
     thread_detail (store, pk) {
-        return send_event(store, "thread_detail", {pk: pk});
+        return cached(store.state.threads, pk) || send_event(store, "thread_detail", {pk: pk});
     },
     watch_thread (store, pk) {
         return send_event(store, "watch_thread", {pk: pk});
@@ -140,13 +167,13 @@ export const actions = {
         return send_event(store, "watch_board", {pk: pk});
     },
     profile_detail (store, pk) {
-        return send_event(store, "profile_detail", {pk: pk});
+        return cached(store.state.profiles, pk) || send_event(store, "profile_detail", {pk: pk});
     },
     reply_list (store, pk) {
         return send_event(store, "reply_list", {pk: pk});
     },
     reply_detail (store, pk) {
-        return send_event(store, "reply_detail", {pk: pk});
+        return cached(store.state.replies, pk) || send_event(store, "reply_detail", {pk: pk});
     },
     post_reply (store, {pk, message}) {
         console.log("posting!");
@@ -184,6 +211,7 @@ export const mutations = {
             console.log(message);
             return;
         }
+        message["timestamp"] = Date.now();
         handler(state, message);
         state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.COMPLETE};
     },

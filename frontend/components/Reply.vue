@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="reply box" v-if="ready">
+    <div class="reply box" :class="{loading}" v-if="ready || old_available">
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="reply.posted_by"/></span>
         &bull;
@@ -8,7 +8,7 @@
       </div>
       <div class="message">{{reply.message}}</div>
     </div>
-    <div class="reply box" v-else-if="loading">
+    <div class="reply box loading" v-else-if="loading">
       Loading...
     </div>
   </div>
@@ -48,6 +48,9 @@ export default {
         return false;
       }
       return this.$store.state.requests[this.request_nonce] == "complete" || this.pk == null;
+    },
+    old_available() {
+      return this.$store.state.replies[this.pk] !== undefined
     },
     loading() {
       if (this.request_nonce == null) {

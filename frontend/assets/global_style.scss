@@ -13,6 +13,7 @@
 }
 
 .interact {
+    box-shadow: 0px 1px 2px var(--shadow);
     transition: box-shadow 0.2s ease-out;
 }
 
@@ -22,12 +23,29 @@
 }
 
 .button {
-    display: inline-block;
+    display: inline-flex;
+    justify-content: center;
     border-radius: 500px;
     padding: 7px 14px;
-    margin-top: 5px;
+    width: 30px;
+
 }
 
 .add {
     background-color: var(--green);
+}
+
+.loading {
+    -webkit-animation: loading 0.5s ease infinite;
+    -moz-animation: loading 0.5s ease infinite;
+    animation: loading 0.5s ease infinite;
+}
+
+@keyframes loading {
+    0%{
+        background-color: var(--background);
+    }
+    100%{
+        background-color: var(--load);
+    }
 }
