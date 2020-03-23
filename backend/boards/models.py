@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.text import slugify 
 from django.conf import settings
 from django.contrib.contenttypes.fields import GenericRelation
-from attach.models import Attachement
+from attach.models import Attachment
 
 # Create your models here.
 class Board(models.Model):
@@ -27,7 +27,7 @@ class Thread(models.Model):
     message = models.TextField(verbose_name="Message", max_length=6000)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     posted_at = models.DateTimeField(auto_now_add=True)
-    attachements = GenericRelation(Attachement)
+    attachments = GenericRelation(Attachment)
 
     @property
     def channel_id(self):
@@ -41,7 +41,7 @@ class Reply(models.Model):
     message = models.TextField(verbose_name="Message", max_length=6000)
     reply_in = models.ForeignKey(Thread, on_delete=models.CASCADE)
     posted_at = models.DateTimeField(auto_now_add=True)
-    attachements = GenericRelation(Attachement)
+    attachments = GenericRelation(Attachment)
 
     class Meta:
         verbose_name_plural = "Replies"

@@ -20,11 +20,11 @@
                 <span class="open"><a href="{% url 'thread' board=object.slug pk=thread.pk %}">[Open]</a></span>
             </div>
             <div class="message">
-                {% if thread.attachements.count %}
-                    <div class="attachements">
+                {% if thread.attachments.count %}
+                    <div class="attachments">
                         <ul>
-                        {% for attachement in thread.attachements.all %}
-                            <li><a href="{{ attachement.upload.url }}">{{ attachement.upload.name }}</a></li>
+                        {% for attachment in thread.attachments.all %}
+                            <li><a href="{{ attachment.upload.url }}">{{ attachment.upload.name }}</a></li>
                         {% endfor %}
                         </ul>
                     </div>

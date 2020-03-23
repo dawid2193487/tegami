@@ -24,7 +24,7 @@ class BoardView(DetailView):
         if form.is_valid():
             message = form.cleaned_data["message"]
             t = Thread.objects.create(posted_by=request.user, message=message, board=self.object)
-            form.save_attachements(t)
+            form.save_attachments(t)
             return redirect("thread", board=self.object.slug, pk=t.pk)
         else:
             messages.add_message(request, messages.ERROR, "Invalid form.")
@@ -55,7 +55,7 @@ class ThreadView(DetailView):
         if form.is_valid():
             message = form.cleaned_data["message"]
             r = Reply.objects.create(posted_by=request.user, message=message, reply_in=self.object)
-            form.save_attachements(r)
+            form.save_attachments(r)
         else:
             messages.add_message(request, messages.ERROR, "Invalid form.")
         

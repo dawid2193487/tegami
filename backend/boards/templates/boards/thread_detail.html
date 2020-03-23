@@ -9,11 +9,11 @@
             <span class="posted_on">{{ object.posted_at }}</span>
         </div>
         <div class="message">
-        {% if object.attachements.count %}
-            <div class="attachements">
+        {% if object.attachments.count %}
+            <div class="attachments">
                 <ul>
-                {% for attachement in object.attachements.all %}
-                    <li><a href="{{ attachement.upload.url }}">{{ attachement.upload.name }}</a></li>
+                {% for attachment in object.attachments.all %}
+                    <li><a href="{{ attachment.upload.url }}">{{ attachment.upload.name }}</a></li>
                 {% endfor %}
                 </ul>
             </div>
@@ -29,11 +29,11 @@
                 <span class="posted_on">{{ reply.posted_at }}</span>
             </div>
             <div class="message">
-                {% if reply.attachements.count %}
-                <div class="attachements">
+                {% if reply.attachments.count %}
+                <div class="attachments">
                     <ul>
-                    {% for attachement in reply.attachements.all %}
-                        <li><a href="{{ attachement.upload.url }}">{{ attachement.upload.name }}</a></li>
+                    {% for attachment in reply.attachments.all %}
+                        <li><a href="{{ attachment.upload.url }}">{{ attachment.upload.name }}</a></li>
                     {% endfor %}
                     </ul>
                 </div>
