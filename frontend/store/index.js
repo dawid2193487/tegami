@@ -39,6 +39,7 @@ function cached(set, pk) {
 const response_handlers = {
     board_list (state, payload) {
         for (let board of payload.boards) {
+            copystamp(payload, board);
             state.boards = {...state.boards, [board.pk]: board };
         }
     },
@@ -51,9 +52,10 @@ const response_handlers = {
     thread_list (state, payload) {
         // state.boards = { ...state.boards, [payload.board.pk]: payload.board };
 
-        // for (let thread of payload.threads) {
-        //     state.threads = {...state.threads, [thread.pk]: {...state.threads[thread.pk], ...thread }};
-        // }
+        for (let thread of payload.threads) {
+            copystamp(payload, thread);
+            state.threads = {...state.threads, [thread.pk]: {...state.threads[thread.pk], ...thread }};
+        }
 
         // const pks = payload.threads.map((thread) => thread.pk);
 
@@ -78,10 +80,11 @@ const response_handlers = {
 
     reply_list (state, payload) {
         //console.log(payload);
-        /*for (let reply of payload.replies) {
+        for (let reply of payload.replies) {
+            copystamp(payload, reply);
             state.replies = {...state.replies, [reply.pk]: reply };
         }
-
+        /*
         const pks = payload.replies.map((reply) => reply.pk);
         console.log(state.threads[payload.thread.pk]);
         state.threads[payload.thread.pk] = 
