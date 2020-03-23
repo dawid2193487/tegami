@@ -15,6 +15,11 @@ html {
 
   --shadow: rgba(0, 0, 0, 0.50);
   --half-shadow: rgba(0, 0, 0, 0.25);
+  --red: #df2935;
+  --yellow: #e89005;
+  --orange: #ec7505;
+  --pumpkin: #f42b03;
+  --green: #63ff75;
 }
 
 body {

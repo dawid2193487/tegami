@@ -23,12 +23,14 @@ export default {
   ** Global CSS
   */
   css: [
+    '@fortawesome/fontawesome-svg-core/styles.css',
   ],
   /*
   ** Plugins to load before mounting the App
   */
   plugins: [
-    {src: '~plugins/native-websocket.js', ssr: false}
+    {src: '~plugins/native-websocket.js', ssr: false},
+    '~plugins/fontawesome.js'
   ],
   /*
   ** Nuxt.js dev-modules
