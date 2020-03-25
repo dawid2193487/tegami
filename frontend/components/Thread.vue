@@ -7,6 +7,7 @@
         <span class="date">{{thread.posted_at}}</span>
       </div>
       <div class="message">{{thread.message}}</div>
+      <Attachments :set="thread.attachments"/>
       <Replies :pk="pk" :reply_set="thread.reply_set"/>
       <Composer @send="reply"/>
     </div>
@@ -31,9 +32,10 @@ import { mapActions } from 'vuex';
 import ProfilePreview from "~/components/ProfilePreview";
 import Replies from "~/components/Replies";
 import Composer from "~/components/Composer";
+import Attachments from "~/components/Attachments";
 
 export default {
-  components: { ProfilePreview, Replies, Composer },
+  components: { ProfilePreview, Replies, Composer, Attachments },
   props: ["pk"],
   data: () => { return {
     request_nonce: null,

@@ -9,8 +9,8 @@ html {
     --orange: #ec7505;
     --pumpkin: #f42b03;
     --green: #63ff75;
-    --background: #363636;
-    --text:  #e0e0e0;
+    --background: white;
+    --text:  black;
     color: var(--text);
     --load: #f0f0f0;
 }
@@ -107,4 +107,8 @@ h1, h2, h3, h4, h5 {
 }
 .green {
     background-color: var(--green);
+}
+
+.message + .attachments {
+    margin-top: 10px;
 }

@@ -7,6 +7,7 @@
         <span class="date">{{reply.posted_at}}</span>
       </div>
       <div class="message">{{reply.message}}</div>
+      <Attachments :set="reply.attachments"/>
     </div>
     <div class="reply box loading" v-else-if="loading">
       Loading...
@@ -29,9 +30,10 @@
 <script>
 import { mapActions } from 'vuex';
 import ProfilePreview from "~/components/ProfilePreview";
+import Attachments from "~/components/Attachments";
 
 export default {
-  components: { ProfilePreview },
+  components: { ProfilePreview, Attachments },
   props: ["pk"],
   data: () => { return {
     request_nonce: null,
