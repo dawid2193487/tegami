@@ -178,18 +178,20 @@ export const actions = {
     reply_detail (store, pk) {
         return cached(store.state.replies, pk) || send_event(store, "reply_detail", {pk: pk});
     },
-    post_reply (store, {pk, message}) {
+    post_reply (store, {pk, message, upload_tokens}) {
         console.log("posting!");
         console.log(`in action: ${message}`);
         return send_event(store, "post_reply", {
             pk: pk,
             message: message,
+            upload_tokens
         });
     },
-    post_thread(store, {pk, message}) {
+    post_thread(store, {pk, message, upload_tokens}) {
         return send_event(store, "post_thread", {
             pk: pk,
             message: message,
+            upload_tokens
         });
     }
 }

@@ -17,7 +17,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    margin-right: 10px;
+    //margin-right: 10px;
     border-radius: 10px;
     padding: 0;
     position: relative;

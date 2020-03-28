@@ -9,7 +9,7 @@
       <div class="message">{{thread.message}}</div>
       <Attachments :set="thread.attachments"/>
       <Replies :pk="pk" :reply_set="thread.reply_set"/>
-      <Composer @send="reply"/>
+      <Composer :uploads="true" @send="reply"/>
     </div>
     <div class="thread box loading" v-else-if="loading">
       Loading...
@@ -42,9 +42,9 @@ export default {
   }},
   methods: {
     ...mapActions(['thread_detail', 'post_reply']),
-    reply(message) {
+    reply({message, upload_tokens}) {
       console.log(`in reply: ${message}`);
-      this.post_reply({pk: this.thread.pk, message: message});
+      this.post_reply({pk: this.thread.pk, message: message, upload_tokens});
     }
   },
   computed: {

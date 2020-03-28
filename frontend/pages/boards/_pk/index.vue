@@ -2,9 +2,9 @@
   <div class="container">
     <BoardHeader :board="board"/>
     <div class="threads" v-if="ready">
-      <Thread class="thread_container" v-for="pk in board.thread_set" :pk="pk" :key="pk"/>
+      <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
     </div>
-    <Composer @send="new_thread" class="thread_container composer" text="Post a thread"/>
+    <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
   </div>
 </template>
 
@@ -57,12 +57,15 @@ export default {
         return true;
       }
       return this.$store.state.requests[this.request_nonce] == "pending";
+    },
+    threads() {
+      return this.board.thread_set.slice().reverse();
     }
   },
   methods: {
     ...mapActions(['board_detail', 'watch_board', 'post_thread']),
-    new_thread(message) {
-      this.post_thread({pk: this.pk, message: message})
+    new_thread({message, upload_tokens}) {
+      this.post_thread({pk: this.pk, message: message, upload_tokens})
     }
   },
   mounted () {

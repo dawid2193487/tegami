@@ -6,8 +6,10 @@
 
 <style lang="scss" scoped>
 .attachments {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    row-gap: 10px;
+    column-gap: 10px;
 }
 </style>
 

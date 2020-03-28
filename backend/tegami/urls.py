@@ -18,12 +18,14 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 import boards.views
+import attach.views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('upload/', attach.views.UploadView.as_view(), name="upload"),
     path('', boards.views.BoardList.as_view(), name="board-list"),
     path('<slug>/', boards.views.BoardView.as_view(), name="board"),
-    path('<slug:board>/<pk>/', boards.views.ThreadView.as_view(), name="thread")
+    path('<slug:board>/<pk>/', boards.views.ThreadView.as_view(), name="thread"),
 ]
 
 if settings.DEBUG:

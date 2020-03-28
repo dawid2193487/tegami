@@ -5,6 +5,7 @@ from channels.exceptions import StopConsumer
 from asgiref.sync import async_to_sync
 
 from .models import Thread, Reply, Board
+from attach.models import Attachment
 from .serializers import ThreadSerializer, ReplySerializer, BoardSerializer
 from profiles.serializers import ProfileSerializer
 from nonce.models import Nonce
@@ -132,6 +133,11 @@ class AccessConsumer(JsonWebsocketConsumer):
             message=content["message"],
             reply_in=thread
         )
+        if "upload_tokens" in content:
+            for token in content["upload_tokens"]:
+                attachment = Attachment.objects.get(upload_token=token)
+                attachment.content_object = reply 
+                attachment.save()
         Nonce.stamp(content["nonce"])
         return {
             "type": "post_reply_ok",
@@ -145,6 +151,11 @@ class AccessConsumer(JsonWebsocketConsumer):
             message=content["message"],
             board=board
         )
+        if "upload_tokens" in content:
+            for token in content["upload_tokens"]:
+                attachment = Attachment.objects.get(upload_token=token)
+                attachment.content_object = thread 
+                attachment.save()
         Nonce.stamp(content["nonce"])
         return {
             "type": "post_thread_ok",
