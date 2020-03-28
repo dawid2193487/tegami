@@ -4,7 +4,7 @@
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="thread.posted_by"/></span>
         &bull;
-        <span class="date">{{thread.posted_at}}</span>
+        <span class="date">{{date}}</span>
       </div>
       <div class="message">{{thread.message}}</div>
       <Attachments :set="thread.attachments"/>
@@ -33,6 +33,7 @@ import ProfilePreview from "~/components/ProfilePreview";
 import Replies from "~/components/Replies";
 import Composer from "~/components/Composer";
 import Attachments from "~/components/Attachments";
+import { format } from 'timeago.js';
 
 export default {
   components: { ProfilePreview, Replies, Composer, Attachments },
@@ -50,6 +51,9 @@ export default {
   computed: {
     thread() {
       return this.$store.state.threads[this.pk] || {};
+    },
+    date() {
+      return format(new Date(this.thread.posted_at));
     },
     ready() {
       if (this.request_nonce == null) {

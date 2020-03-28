@@ -4,7 +4,7 @@
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="reply.posted_by"/></span>
         &bull;
-        <span class="date">{{reply.posted_at}}</span>
+        <span class="date">{{date}}</span>
       </div>
       <div class="message">{{reply.message}}</div>
       <Attachments :set="reply.attachments"/>
@@ -31,6 +31,7 @@
 import { mapActions } from 'vuex';
 import ProfilePreview from "~/components/ProfilePreview";
 import Attachments from "~/components/Attachments";
+import { format } from 'timeago.js';
 
 export default {
   components: { ProfilePreview, Attachments },
@@ -44,6 +45,9 @@ export default {
   computed: {
     reply() {
       return this.$store.state.replies[this.pk] || {};
+    },
+    date() {
+      return format(new Date(this.reply.posted_at));
     },
     ready() {
       if (this.request_nonce == null) {

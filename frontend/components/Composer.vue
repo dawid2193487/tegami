@@ -170,6 +170,7 @@ export default {
       this.upload_tokens = [];
       this.enabled = false;
       this.message = "";
+      this.$refs.upload.value = "";
     },
     enable() {
       this.enabled = true;

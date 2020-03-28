@@ -1,7 +1,8 @@
 <template>
-    <div class="attachment box interact">
+    <div class="attachment box interact" :class="{'noimg': data.thumb == null}">
         <a :href="`http://localhost:8000${data.path}`">
-            <img :src="`http://localhost:8000${data.thumb}`"/>
+            <img v-if="data.thumb" :src="`http://localhost:8000${data.thumb}`"/>
+            <div v-else class="placeholder"><font-awesome-icon icon="file"/></div>
         </a>
         <div class="filename">{{data.name}}</div>
     </div>
@@ -10,7 +11,7 @@
 <style lang="scss">
 .attachment {
     // width: 200px;
-    height: 200px;
+    height: 150px;
     flex-basis: 20%;
     display: flex;
     flex-direction: column;
@@ -21,6 +22,14 @@
     border-radius: 10px;
     padding: 0;
     position: relative;
+    .placeholder {
+        font-size: 400%;
+    }
+    &.noimg {
+        .filename {
+            opacity: 1;
+        }
+    }
 
     &:hover {
         .filename {
