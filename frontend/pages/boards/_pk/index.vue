@@ -113,6 +113,7 @@ export default {
     update() {
       this.displayed_threads = this.new_threads;
       this.stale = false;
+      this.display = 10;
     },
     load_more(vis) {
       if (vis) {
