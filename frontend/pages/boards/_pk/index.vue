@@ -1,15 +1,33 @@
 <template>
   <div class="container">
-    <BoardHeader :board="board"/>
+    <BoardHeader :board="board" v-observe-visibility="set_header_visibility"/>
     <div class="threads" v-if="ready">
+      <div 
+        class="thread_container stale box interact link green" 
+        v-if="stale && !header_visible" 
+        @click="scroll_to_top">
+        New messages.
+        </div>
       <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
-      <div v-if="display < this.board.thread_set.length" @click="display+=10" class="thread_container load box orange interact link">Load 10 more...</div>
+      <div 
+        v-observe-visibility="load_more"
+        v-if="display < displayed_threads.length" 
+        @click="display+=10" 
+        class="thread_container load box orange interact link">
+        Load 10 more...
+      </div>
     </div>
     <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
   </div>
 </template>
 
 <style lang="scss" scoped>
+.stale {
+  position: sticky;
+  top: 20px;
+  z-index: 4;
+}
+
 .threads {
   display: flex;
   flex-wrap: wrap;
@@ -47,7 +65,20 @@ export default {
     request_nonce: null,
     subscription_nonce: null,
     display: 10,
+    displayed_threads: [],
+    stale: false,
+    header_visible: true,
   }},
+  watch: {
+    board(new_board) {
+      console.log(this);
+      if (this.displayed_threads.length == 0 || this.header_visible) {
+        this.update()
+      } else {
+        this.stale = true;
+      }
+    }
+  },
   computed: {
     pk() {
       return this.$route.params.pk;
@@ -67,14 +98,36 @@ export default {
       }
       return this.$store.state.requests[this.request_nonce] == "pending";
     },
+    new_threads() {
+      return this.board.thread_set || [];
+    },
     threads() {
-      return this.board.thread_set.slice().reverse().slice(0, this.display);
+      return this.displayed_threads.slice(0, this.display);
     }
   },
   methods: {
     ...mapActions(['board_detail', 'watch_board', 'post_thread']),
     new_thread({message, upload_tokens}) {
       this.post_thread({pk: this.pk, message: message, upload_tokens})
+    },
+    update() {
+      this.displayed_threads = this.new_threads;
+      this.stale = false;
+    },
+    load_more(vis) {
+      if (vis) {
+        console.log("loading more");
+        this.display += 10;
+      }
+    },
+    set_header_visibility(vis) {
+      this.header_visible = vis;
+      if (vis) {
+        this.update();
+      }
+    },
+    scroll_to_top() {
+      window.scrollTo(0,0);
     }
   },
   mounted () {

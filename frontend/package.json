@@ -19,7 +19,8 @@
     "sass-loader": "^8.0.2",
     "timeago.js": "^4.0.2",
     "uuidv4": "^6.0.6",
-    "vue-native-websocket": "^2.0.14"
+    "vue-native-websocket": "^2.0.14",
+    "vue-observe-visibility": "^0.4.6"
   },
   "devDependencies": {}
 }

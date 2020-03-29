@@ -30,7 +30,8 @@ export default {
   */
   plugins: [
     {src: '~plugins/native-websocket.js', ssr: false},
-    '~plugins/fontawesome.js'
+    '~plugins/fontawesome.js',
+    '~plugins/observe-visibility.js',
   ],
   /*
   ** Nuxt.js dev-modules
