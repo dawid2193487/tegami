@@ -8,7 +8,9 @@
         @click="scroll_to_top">
         New messages.
         </div>
-      <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
+      <transition-group name="thread-list" tag="div" class="transition">
+        <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
+      </transition-group>
       <div 
         v-observe-visibility="load_more"
         v-if="display < displayed_threads.length" 
@@ -50,6 +52,17 @@
   padding-top: 10px;
   padding-bottom: 10px;
   max-width: 800px;
+}
+
+.transition {
+  flex-basis: 100%;
+}
+
+.thread-list-enter {
+  opacity: 0;
+}
+.thread-list-enter-active, .thread-list-leave-active {
+  transition: all 0.5s;
 }
 </style>
 
