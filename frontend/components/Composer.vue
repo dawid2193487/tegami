@@ -1,6 +1,10 @@
 <template>
   <div class="contain">
     <div class="compose box" :class="{'open': enabled}" @keydown.esc="enabled=false">
+      <div class="uploading" v-if="uploading">
+        <div class="progress" :style="`right: calc(100% - ${progress})`"></div>
+        <div class="label">Uploading...</div>
+      </div>
       <textarea ref="input" placeholder="Type your message here..." v-model="message">
       </textarea>
       <div class="navigation">
@@ -24,6 +28,50 @@
 </template>
 
 <style lang="scss" scoped>
+.contain {
+  position: relative;
+}
+
+.uploading {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--background);
+  animation: upload 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.5
+}
+
+.progress {
+  z-index: 0;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transition: right linear 0.2s;
+  background-color: var(--green);
+  opacity: 0.7;
+}
+
+.label {
+  z-index: 1;
+}
+
+@keyframes upload {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 0.5;
+  }
+}
+
+
 .desc {
   margin-left: 0.6ch;
 }
@@ -52,6 +100,7 @@
 }
 
 .compose {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   max-height: 0px;
@@ -124,15 +173,22 @@ export default {
     message: "",
     enabled: false,
     upload_tokens: [],
+    uploading: false,
   }},
   computed: {
     hint() {
       return this.text || "";
+    },
+    progress() {
+      let files = this.$refs.upload.files.length;
+      let complete = this.upload_tokens.length;
+      return `${Math.ceil((complete/files) * 100)}%`;
     }
   },
   methods: {
     upload() {
       const files = new Array(...this.$refs.upload.files);
+      this.uploading = true;
       files.reduce((curr, attachment) => {
         return curr.then(() => {
           return fetch("http://localhost:8000/upload/").then((response) => {
@@ -160,6 +216,8 @@ export default {
         })
       }, Promise.resolve()).then(()=>{
         this.send();
+      }).catch(() => {
+        this.uploading = false;
       })
     },
     send() {
@@ -167,6 +225,7 @@ export default {
         message: this.message, 
         upload_tokens: this.upload_tokens
       });
+      this.uploading = false;
       this.upload_tokens = [];
       this.enabled = false;
       this.message = "";

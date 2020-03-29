@@ -3,6 +3,7 @@
     <BoardHeader :board="board"/>
     <div class="threads" v-if="ready">
       <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
+      <div v-if="display < this.board.thread_set.length" @click="display+=10" class="thread_container load box orange interact link">Load 10 more...</div>
     </div>
     <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
   </div>
@@ -25,6 +26,13 @@
   flex-basis: 100%;
   margin: 10px;
 }
+
+.load {
+  padding-left: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  max-width: 800px;
+}
 </style>
 
 <script>
@@ -38,6 +46,7 @@ export default {
   data: () => { return {
     request_nonce: null,
     subscription_nonce: null,
+    display: 10,
   }},
   computed: {
     pk() {
@@ -59,7 +68,7 @@ export default {
       return this.$store.state.requests[this.request_nonce] == "pending";
     },
     threads() {
-      return this.board.thread_set.slice().reverse();
+      return this.board.thread_set.slice().reverse().slice(0, this.display);
     }
   },
   methods: {

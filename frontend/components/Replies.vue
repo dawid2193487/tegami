@@ -22,6 +22,7 @@
 .expander {
   position: sticky;
   top: 0px;
+  z-index: 2;
 }
 </style>
 
