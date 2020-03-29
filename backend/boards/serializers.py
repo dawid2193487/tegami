@@ -9,7 +9,7 @@ class BoardSerializer(serializers.ModelSerializer):
     #thread_set = serializers.PrimaryKeyRelatedField(many=True, queryset=Thread.objects.all().order_by("pk"))
     class Meta:
         model = Board
-        fields = ['pk', 'name', 'description', 'slug', 'created_at', 'thread_set']
+        fields = ['pk', 'name', 'description', 'slug', 'created_at']
 
 class ThreadSerializer(serializers.ModelSerializer):
     attachments = AttachmentSerializer(many=True)
