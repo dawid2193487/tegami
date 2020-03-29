@@ -9,7 +9,7 @@ class BoardAdmin(admin.ModelAdmin):
 
 @admin.register(Thread)
 class ThreadAdmin(admin.ModelAdmin):
-    readonly_fields = ('posted_at',)
+    readonly_fields = ('posted_at', 'bump_at')
 
 @admin.register(Reply)
 class ReplyAdmin(admin.ModelAdmin):

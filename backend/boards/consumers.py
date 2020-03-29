@@ -54,7 +54,11 @@ class AccessConsumer(JsonWebsocketConsumer):
     def tegami_board_detail(content):
         board = Board.objects.get(pk=content["pk"])
         data = BoardSerializer(board).data
-        threads = list(Thread.objects.filter(board=board).order_by("-posted_at").values_list("pk", flat=True))
+        threads = list(
+            Thread.objects.filter(board=board)
+            .order_by("-bump_at", "-posted_at")
+            .values_list("pk", flat=True)
+        )
         data["thread_set"] = threads
         return {
             "type": "board_detail",

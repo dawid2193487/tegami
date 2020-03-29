@@ -27,6 +27,7 @@ class Thread(models.Model):
     message = models.TextField(verbose_name="Message", max_length=6000)
     board = models.ForeignKey(Board, on_delete=models.CASCADE)
     posted_at = models.DateTimeField(auto_now_add=True)
+    bump_at = models.DateTimeField(auto_now_add=True)
     attachments = GenericRelation(Attachment)
 
     @property
