@@ -10,6 +10,8 @@
   background-color: var(--orange);
   color: white;
   padding: 1em;
+  padding-left: 6vw;
+  padding-right: 6vw;
   box-shadow: 0px 1px 1px var(--shadow);
   transition: box-shadow 0.05s ease-in-out;
 }

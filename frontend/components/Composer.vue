@@ -8,18 +8,18 @@
       <textarea ref="input" placeholder="Type your message here..." v-model="message">
       </textarea>
       <div class="navigation">
-        <div class="interact button add send" @click="upload">
+        <div class="interact button add send navitem" @click="upload">
           <font-awesome-icon icon="reply"/>
           <span class="hint" v-if="hint">{{hint}}</span>
         </div>
-        <div class="interact button close" @click="enabled=false">
+        <div class="interact button close navitem" @click="enabled=false">
           <font-awesome-icon icon="times"/>
         </div>
-        <input type="file" v-if="uploads" ref="upload" multiple>
+        <input class="file navitem" type="file" v-if="uploads" ref="upload" multiple>
       </div>
     </div>
     <div class="box navigation navmargin" :class="{'collapse': enabled}">
-      <div class="interact button reply add" @click="enable">
+      <div class="interact navitem button reply add" @click="enable">
         <font-awesome-icon icon="reply"/>
         <span class="hint" v-if="hint">{{hint}}</span>
       </div>
@@ -57,6 +57,10 @@
   opacity: 0.7;
 }
 
+.file {
+  //margin-top: 5px;
+}
+
 .label {
   z-index: 1;
 }
@@ -78,9 +82,18 @@
 
 .navigation {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   max-height: 50px;
   transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  @media (max-width: 600px) {
+    max-height: 100px;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+
+  .navitem {
+    //margin-top: 5px;
+  }
 
   &.collapse {
     overflow: hidden;
@@ -114,6 +127,15 @@
     padding: 8px;
     max-height: 100px;
     opacity: 1;
+  }
+
+  @media (max-width: 600px) {
+    transition: max-height 0.3s ease-in-out, opacity 0.2s ease-in-out;
+    &.open {
+      padding: 8px;
+      max-height: 200px;
+      opacity: 1;
+    }
   }
 
   .button {

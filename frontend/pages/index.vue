@@ -12,6 +12,7 @@
 .container {
   margin-top: 2em;
   margin-left: 10vw;
+  margin-right: 10vw;
 }
 
 .apptitle {
@@ -24,9 +25,10 @@
 
 .board_list {
   display: flex;
-  width: 30vw;
+  max-width: 500px;
   flex-wrap: wrap;
 }
+
 .board_listing {
   flex-basis: 100%;
   margin-bottom: 10px;
@@ -61,7 +63,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['board_list'])
+    ...mapActions(['board_list']),
   },
   mounted() {
     this.board_list().then((nonce) => {

@@ -11,6 +11,9 @@
     row-gap: 10px;
     column-gap: 10px;
     margin-bottom: 10px;
+    @media (max-width: 600px) {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
 }
 </style>
 

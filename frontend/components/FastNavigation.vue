@@ -17,6 +17,8 @@
     padding: 5px;
     z-index: 15;
     transition: box-shadow 0.3s ease-in-out;
+    padding-left: 6vw;
+    padding-right: 6vw;
 }
 
 .home {

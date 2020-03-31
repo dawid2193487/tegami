@@ -22,7 +22,7 @@
           Load 10 more...
         </div>
       </div>
-      <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
+      <Composer :uploads="true" @send="new_thread" class="composer" text="Post a thread"/>
     </div>
   </div>
 </template>
@@ -44,6 +44,8 @@
   position: sticky;
   bottom: 0px;
   z-index: 2;
+  margin-left: calc(5vw + 10px);
+  margin-right: calc(5vw + 10px);
 }
 
 .thread_container {
@@ -65,8 +67,14 @@
 .thread-list-enter {
   opacity: 0;
 }
+
 .thread-list-enter-active, .thread-list-leave-active {
   transition: all 0.5s;
+}
+
+.threads {
+  margin-left: 5vw;
+  margin-right: 5vw;
 }
 </style>
 
