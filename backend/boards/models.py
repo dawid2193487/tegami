@@ -10,6 +10,7 @@ class Board(models.Model):
     description = models.CharField(verbose_name="Description", max_length=255)
     slug = models.SlugField(max_length=20)
     created_at = models.DateTimeField(auto_now_add=True)
+    color = models.CharField(max_length=7, null=True)
 
     @property
     def channel_id(self):

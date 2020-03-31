@@ -1,33 +1,36 @@
 <template>
   <div class="container" @open_preview="open_preview">
+    <FastNavigation :board="board" :shade="!header_visible"/>
     <FileExpander ref="expander"/>
-    <BoardHeader :board="board" v-observe-visibility="set_header_visibility"/>
-    <div class="threads" v-if="ready">
-      <div 
-        class="thread_container stale box interact link green" 
-        v-if="stale && !header_visible" 
-        @click="scroll_to_top">
-        New messages.
+    <div class="content">
+      <BoardHeader :board="board" v-observe-visibility="set_header_visibility"/>
+      <div class="threads" v-if="ready">
+        <div 
+          class="thread_container stale box interact link green" 
+          v-if="stale && !header_visible" 
+          @click="scroll_to_top">
+          New messages.
+          </div>
+        <transition-group name="thread-list" tag="div" class="transition">
+          <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
+        </transition-group>
+        <div 
+          v-observe-visibility="load_more"
+          v-if="display < displayed_threads.length" 
+          @click="display+=10" 
+          class="thread_container load box orange interact link">
+          Load 10 more...
         </div>
-      <transition-group name="thread-list" tag="div" class="transition">
-        <Thread class="thread_container" v-for="pk in threads" :pk="pk" :key="pk"/>
-      </transition-group>
-      <div 
-        v-observe-visibility="load_more"
-        v-if="display < displayed_threads.length" 
-        @click="display+=10" 
-        class="thread_container load box orange interact link">
-        Load 10 more...
       </div>
+      <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
     </div>
-    <Composer :uploads="true" @send="new_thread" class="thread_container composer" text="Post a thread"/>
   </div>
 </template>
 
 <style lang="scss" scoped>
 .stale {
   position: sticky;
-  top: 20px;
+  top: 50px;
   z-index: 4;
 }
 
@@ -73,9 +76,10 @@ import BoardHeader from "~/components/BoardHeader";
 import Thread from "~/components/Thread";
 import Composer from "~/components/Composer";
 import FileExpander from "~/components/FileExpander";
+import FastNavigation from "~/components/FastNavigation";
 
 export default {
-  components: { BoardHeader, Thread, Composer, FileExpander },
+  components: { BoardHeader, Thread, Composer, FileExpander, FastNavigation },
   data: () => { return {
     request_nonce: null,
     subscription_nonce: null,
