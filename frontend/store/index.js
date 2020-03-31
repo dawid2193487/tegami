@@ -40,7 +40,10 @@ function cached(set, pk) {
 const response_handlers = {
     board_list (state, payload) {
         for (let board of payload.boards) {
-            state.boards = {...state.boards, [board.pk]: board };
+            let target = {};
+            const prev = state.boards[board.pk];
+            Object.assign(target, prev, board)
+            state.boards = {...state.boards, [board.pk]: target };
         }
     },
 
