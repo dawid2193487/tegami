@@ -1,22 +1,23 @@
-body {
-    margin: 0;
-}
-
 html {
     font-family: 'Arial', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
         Roboto, 'Helvetica Neue', Arial, sans-serif;
 
-    --shadow: rgba(0, 0, 0, 0.50);
-    --half-shadow: rgba(0, 0, 0, 0.25);
+    --shadow: rgba(255, 255, 255, 0.5);
+    --half-shadow: rgba(255, 255, 255, 0.25);
     --red: #df2935;
     --yellow: #e89005;
     --orange: #ec7505;
     --pumpkin: #f42b03;
     --green: #a2ffad;
-    --background: white;
-    --text:  black;
-    //color: var(--text);
+    --background: rgb(36, 36, 36);
+    --text:  rgb(230, 230, 230);
+    color: var(--text);
     --load: #f0f0f0;
+
+}
+body {
+    background-color: var(--background);
+    margin: 0;
 }
 
 a {
@@ -44,8 +45,10 @@ h1, h2, h3, h4, h5 {
 .box {
     background-color: var(--background);
     padding: 0.5em;
-    box-shadow: 0px 1px 2px var(--shadow);
-    transition: box-shadow 0.05s ease-in-out;
+    box-shadow: unset;
+    //border: 1px solid var(--shadow);
+    border-left: 5px solid var(--shadow);
+    //transition: box-shadow 0.05s ease-in-out;
     max-width: 800px;
     margin-top: 1px;
 }
@@ -56,12 +59,12 @@ h1, h2, h3, h4, h5 {
 }
 
 .interact {
-    box-shadow: 0px 1px 2px var(--shadow);
+    //box-shadow: 0px 1px 2px var(--shadow);
     transition: box-shadow 0.2s ease-out;
 }
 
 .interact:hover {
-    box-shadow: 0px 2px 5px var(--shadow) !important;
+    //box-shadow: 0px 2px 5px var(--shadow) !important;
     cursor: pointer;
 }
 
@@ -110,4 +113,24 @@ h1, h2, h3, h4, h5 {
 
 .message + .attachments {
     margin-top: 10px;
+}
+
+.attachment {
+    border-left: unset;
+    border-radius: 0px !important;
+    border: 1px solid var(--shadow);
+}
+
+.meta {
+    border-bottom: 1px solid var(--shadow);
+    padding-bottom: 2px;
+    margin-bottom: 3px;
+}
+
+.button {
+    border-radius: 0;
+}
+
+.board_header {
+    box-shadow: unset !important;
 }

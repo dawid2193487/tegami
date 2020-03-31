@@ -1,9 +1,10 @@
 <template>
-    <div class="attachment box interact" :class="{'noimg': data.thumb == null}">
-        <a :href="`http://localhost:8000${data.path}`">
-            <img v-if="data.thumb" :src="`http://localhost:8000${data.thumb}`"/>
-            <div v-else class="placeholder"><font-awesome-icon icon="file"/></div>
-        </a>
+    <div 
+        class="attachment box interact" 
+        :class="{'noimg': data.thumb == null}"
+        @click="open">
+        <img v-if="data.thumb" :src="`http://localhost:8000${data.thumb}`"/>
+        <div v-else class="placeholder"><font-awesome-icon icon="file"/></div>
         <div class="filename">{{data.name}}</div>
     </div>
 </template>
@@ -19,7 +20,7 @@
     align-items: center;
     overflow: hidden;
     //margin-right: 10px;
-    border-radius: 10px;
+    //border-radius: 10px;
     padding: 0;
     position: relative;
     .placeholder {
@@ -69,7 +70,42 @@
 </style>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
     props: ["data"],
+    computed: {
+        extension() {
+            const split = this.data.path.split(".")
+            if (split.length>1) {
+                return split[split.length-1]
+            } else {
+                return ""
+            }
+        },
+        fullpath() {
+            return `http://localhost:8000${this.data.path}`;
+        },
+    },
+    methods: {
+        ...mapMutations(["set_preview"]), 
+        previewable(ext) {
+            return {
+                "jpg": 1,
+                "jpeg": 1,
+                "png": 1,
+                "gif": 1,
+                "webm": 1,
+                "mp4": 1,
+            }[ext.toLowerCase()];
+        },
+        open() {
+            if (this.previewable(this.extension)){
+                this.set_preview(this.data.path);
+            } else {
+                window.open(this.fullpath, '_blank');
+            }
+        }
+    }
 }
 </script>

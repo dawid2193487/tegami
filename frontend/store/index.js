@@ -12,6 +12,7 @@ export const state = () => ({
     replies: {},
     profiles: {},
     requests: {},
+    preview: "",
 });
 
 function copystamp(payload, target) {
@@ -39,7 +40,6 @@ function cached(set, pk) {
 const response_handlers = {
     board_list (state, payload) {
         for (let board of payload.boards) {
-            copystamp(payload, board);
             state.boards = {...state.boards, [board.pk]: board };
         }
     },
@@ -232,5 +232,8 @@ export const mutations = {
     set_request_status(state, {nonce, status}) {
         state.requests = { ...state.requests, [nonce]: status};
     },
+    set_preview(state, path) {
+        state.preview = path;
+    }
 }
 

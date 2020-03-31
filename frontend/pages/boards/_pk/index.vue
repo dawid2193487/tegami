@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="container" @open_preview="open_preview">
+    <FileExpander ref="expander"/>
     <BoardHeader :board="board" v-observe-visibility="set_header_visibility"/>
     <div class="threads" v-if="ready">
       <div 
@@ -71,9 +72,10 @@ import { mapActions } from 'vuex';
 import BoardHeader from "~/components/BoardHeader";
 import Thread from "~/components/Thread";
 import Composer from "~/components/Composer";
+import FileExpander from "~/components/FileExpander";
 
 export default {
-  components: { BoardHeader, Thread, Composer },
+  components: { BoardHeader, Thread, Composer, FileExpander },
   data: () => { return {
     request_nonce: null,
     subscription_nonce: null,
@@ -142,6 +144,10 @@ export default {
     },
     scroll_to_top() {
       window.scrollTo(0,0);
+    },
+    open_preview(path) {
+      console.log("open!");
+      this.$refs.expander.show(path)
     }
   },
   mounted () {
