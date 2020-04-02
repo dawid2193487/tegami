@@ -1,6 +1,7 @@
 <template>
     <span>
-      <span v-if="pk">{{profile.display_name}}</span>
+      <span v-if="$fetchState.pending">...</span>
+      <span v-else-if="pk">{{profile.display_name}}</span>
       <span v-else>Anonymous</span>
     </span>
 </template>
@@ -34,9 +35,6 @@ import { mapActions } from 'vuex';
 
 export default {
   props: ["pk"],
-  data: () => { return {
-    request_nonce: null,
-  }},
   methods: {
     ...mapActions(['profile_detail'])
   },
@@ -44,20 +42,11 @@ export default {
     profile() {
       return this.$store.state.profiles[this.pk] || {};
     },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete" || this.pk == null;
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
-    }
   },
-  mounted () {
+  async fetch() {
+    await this.$store.dispatch('profile_detail', this.pk);
+  },
+  /*mounted () {
     if (this.pk == null) {
       console.log("pk null")
       return;
@@ -67,6 +56,6 @@ export default {
       console.log("profile detail request sent!")
       this.request_nonce = nonce;
     });
-  }
+  }*/
 }
 </script>

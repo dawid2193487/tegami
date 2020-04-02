@@ -2,7 +2,7 @@
   <div class="container">
     <div class="apptitle">Tegami</div>
     <h1 class="title"> Boards </h1>
-    <div v-if="ready" class="board_list">
+    <div class="board_list">
         <BoardTile class="board_listing" :pk="pk" v-for="(board, pk) in boards" v-bind:key="pk"/>
     </div>
   </div>
@@ -40,36 +40,28 @@ import { mapActions } from 'vuex';
 import BoardTile from '~/components/BoardTile.vue';
 
 export default {
-  components: {BoardTile},
+  components: { BoardTile },
   data: () => { return {
-    request_nonce: null,
+    ready: false,
+    loading: true,
   }},
   computed: {
     boards() {
       console.log(this.$store.state.boards);
       return this.$store.state.boards
     },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete";
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
-    }
   },
   methods: {
     ...mapActions(['board_list']),
   },
-  mounted() {
+  async fetch({store}) {
+    await store.dispatch('board_list');
+  },
+  /*mounted() {
     this.board_list().then((nonce) => {
       this.request_nonce = nonce;
     })
-  }
+  }*/
 }
 </script>
 

@@ -1,6 +1,9 @@
 <template>
   <div class="container">
-    <div class="reply box" :class="{loading}" v-if="ready || old_available">
+    <div class="reply box loading" v-if="$fetchState.pending">
+      Loading...
+    </div>
+    <div class="reply box" v-else>
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="reply.posted_by"/></span>
         &bull;
@@ -8,9 +11,6 @@
       </div>
       <div class="message">{{reply.message}}</div>
       <Attachments :set="reply.attachments"/>
-    </div>
-    <div class="reply box loading" v-else-if="loading">
-      Loading...
     </div>
   </div>
 </template>
@@ -49,26 +49,33 @@ export default {
     date() {
       return format(new Date(this.reply.posted_at));
     },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete" || this.pk == null;
-    },
-    old_available() {
-      return this.$store.state.replies[this.pk] !== undefined
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
-    }
+    // ready() {
+    //   if (this.request_nonce == null) {
+    //     return false;
+    //   }
+    //   return this.$store.state.requests[this.request_nonce] == "complete" || this.pk == null;
+    // },
+    // old_available() {
+    //   return this.$store.state.replies[this.pk] !== undefined
+    // },
+    // loading() {
+    //   if (this.request_nonce == null) {
+    //     return true;
+    //   }
+    //   return this.$store.state.requests[this.request_nonce] == "pending";
+    // }
   },
-  mounted () {
-    this.reply_detail(this.pk).then((nonce) => {
-      this.request_nonce = nonce;
-    });
-  }
+  async fetch() {
+    await this.$store.dispatch('reply_detail', this.pk);
+    /*store.dispatch('watch_board', route.params.pk).catch((err) => {
+      console.log("err");
+    });*/
+  },
+  // mounted () {
+  //   this.reply_detail(this.pk).then((nonce) => {
+  //     this.request_nonce = nonce;
+  //   });
+  // }
+  
 }
 </script>

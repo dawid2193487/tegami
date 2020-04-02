@@ -4,7 +4,7 @@
     <FileExpander ref="expander"/>
     <div class="content">
       <BoardHeader :board="board" v-observe-visibility="set_header_visibility"/>
-      <div class="threads" v-if="ready">
+      <div class="threads">
         <div 
           class="thread_container stale box interact link green" 
           v-if="stale && !header_visible" 
@@ -113,18 +113,6 @@ export default {
     board() {
       return this.$store.state.boards[this.pk] || {};
     },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete";
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
-    },
     new_threads() {
       return this.board.thread_set || [];
     },
@@ -162,13 +150,19 @@ export default {
       this.$refs.expander.show(path)
     }
   },
-  mounted () {
+  async fetch({store, route}) {
+    await store.dispatch('board_detail', route.params.pk);
+    store.dispatch('watch_board', route.params.pk).catch((err) => {
+      console.log("err");
+    });
+  },
+  /*mounted () {
     this.board_detail(this.$route.params.pk).then((nonce) => {
       this.request_nonce = nonce;
     });
     this.watch_board(this.$route.params.pk).then((nonce) => {
       this.subscription_nonce = nonce;
     });
-  }
+  }*/
 }
 </script>

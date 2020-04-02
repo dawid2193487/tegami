@@ -38,9 +38,6 @@ import BoardButton from '~/components/BoardButton';
 export default {
     props: ["board", "shade"],
     components: { BoardButton }, 
-    data: () => { return {
-        request_nonce: null,
-    }},
     computed: {
         boards() {
             return this.$store.state.boards
@@ -66,10 +63,11 @@ export default {
             return "#000000";
         }*/
     },
-    mounted() {
-        this.board_list().then((nonce) => {
-            this.request_nonce = nonce;
-        });
-    }
+    async fetch() {
+        await this.$store.dispatch('board_list');
+        /*store.dispatch('watch_board', route.params.pk).catch((err) => {
+        console.log("err");
+        });*/
+    },
 }
 </script>

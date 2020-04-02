@@ -47,24 +47,13 @@ export default {
         return "#ffffff";
       }
       return "#000000";
-    },
-    ready() {
-      if (this.request_nonce == null) {
-        return false;
-      }
-      return this.$store.state.requests[this.request_nonce] == "complete";
-    },
-    loading() {
-      if (this.request_nonce == null) {
-        return true;
-      }
-      return this.$store.state.requests[this.request_nonce] == "pending";
     }
   },
-  mounted () {
-    this.board_detail(this.pk).then((nonce) => {
-      this.request_nonce = nonce;
-    });
-  }
+  async fetch() {
+    await this.$store.dispatch('board_detail', this.pk);
+    /*store.dispatch('watch_board', route.params.pk).catch((err) => {
+      console.log("err");
+    });*/
+  },
 }
 </script>

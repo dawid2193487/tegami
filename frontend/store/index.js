@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import { uuid } from 'uuidv4';
+import { rgb_to_hsl } from '~/assets/rgb_to_hsl';
 
 export const state = () => ({
     socket: {
@@ -11,7 +12,8 @@ export const state = () => ({
     threads: {},
     replies: {},
     profiles: {},
-    requests: {},
+    promises: {},
+    queue: [],
     preview: "",
 });
 
@@ -31,7 +33,7 @@ function cached(set, pk) {
     const current = Date.now();
     if (current - obj.timestamp < CACHE_DURATION) {
         console.log("cache hit!");
-        return obj.nonce
+        return Promise.resolve();
     }
     console.log(`cache stale! ${current - obj.timestamp} old.`)
     return false;
@@ -129,6 +131,10 @@ const response_handlers = {
 
     post_reply_ok (state, payload) {
 
+    },
+
+    board_watched_ok(state, payload) {
+
     }
 
 }
@@ -136,11 +142,15 @@ const response_handlers = {
 function send_event({commit, state}, type, params) {
     const nonce = uuid();
     if (state.socket.connected && !state.socket.failed) {
-        commit('set_request_status', { nonce: nonce, status: REQUEST_STATUS.PENDING });
+        //commit('set_request_status', { nonce: nonce, status: REQUEST_STATUS.PENDING });
+        let p = new Promise((resolve, reject) => {
+            commit('register_promise', {nonce, resolve, reject});
+        })
         Vue.prototype.$socket.sendObj({ type: type, nonce: nonce, ...params });
+        return p;
     } else {
-        commit('set_request_status', { nonce: nonce, status: REQUEST_STATUS.FAILED });
-        console.warn(`Calling ${type} before connection is ready!`);
+        commit('queue', () => send_event({commit, state}, type, params));
+        console.warn(`Calling ${type} before connection is ready! Queued.`);
     }
     return nonce;
 }
@@ -196,7 +206,23 @@ export const actions = {
             message: message,
             upload_tokens
         });
-    }
+    },
+}
+
+function resolve_promise(state, {nonce, value}) {
+    let resolve = state.promises[nonce].resolve;
+    resolve(value);
+    delete state.promises[nonce];
+}
+function reject_promise(state, {nonce, value}) {
+    let p = state.promises[nonce];
+    if (p) {
+        console.log(nonce);
+        p.reject(value);
+        delete state.promises[nonce];
+        return 
+    } 
+    console.log("promise not found.");
 }
 
 export const mutations = {
@@ -205,6 +231,10 @@ export const mutations = {
         console.log("Connected!");
         state.socket.connected = true;
         state.socket.connection_guard = true;
+        for (let f of state.queue) {
+            f()
+        }
+        state.queue = [];
         //Vue.prototype.$socket.sendObj({ type: "board_list" });
     },
     SOCKET_ONCLOSE (state, event)  {
@@ -220,20 +250,47 @@ export const mutations = {
         const nonce = message["nonce"];
         const handler = response_handlers[type];
         if (handler == undefined) {
-            state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.FAILED};
+            //state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.FAILED};
+            reject_promise(state, { nonce, value: `unimplemented ${type}`});
             console.log(`unimplemented ${type}`);
             console.log(message);
             return;
         }
         message["timestamp"] = Date.now();
         handler(state, message);
-        state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.COMPLETE};
+        //state.requests = { ...state.requests, [nonce]: REQUEST_STATUS.COMPLETE};
+        resolve_promise(state, {nonce, value: "ok"});
     },
     SOCKET_RECONNECT(state, count) {
         console.info(state, count);
     },
     set_request_status(state, {nonce, status}) {
         state.requests = { ...state.requests, [nonce]: status};
+    },
+    register_promise(state, {nonce, resolve, reject}) {
+        state.promises = { ...state.promises, [nonce]: { resolve, reject }};
+    },
+    resolve_promise(state, {nonce, value}) {
+        let resolve = state.promises[nonce].resolve;
+        resolve(value);
+        delete state.promises[nonce];
+    },
+    reject_promise(state, {nonce, value}) {
+        let p = state.promises[nonce];
+        if (p) {
+            console.log(nonce);
+            p.reject(value);
+            delete state.promises[nonce];
+            return 
+        } 
+        console.log("promise not found.");
+    },
+    queue(state, f) {
+        if (state.socket.connected && !state.socket.failed) {
+            f();
+        } else {
+            state.queue = [...state.queue, f];
+        }
     },
     set_preview(state, path) {
         state.preview = path;

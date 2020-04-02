@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <div class="thread box" v-if="ready">
+    <div v-if="$fetchState.pending" class="thread box loading">Loading...</div>
+    <div v-else class="thread box">
       <div class="meta">
         <span class="poster"><ProfilePreview :pk="thread.posted_by"/></span>
         &bull;
@@ -10,9 +11,6 @@
       <Attachments :set="thread.attachments"/>
       <Replies :pk="pk" :reply_set="thread.reply_set"/>
       <Composer :uploads="true" @send="reply"/>
-    </div>
-    <div class="thread box loading" v-else-if="loading">
-      Loading...
     </div>
   </div>
 </template>
@@ -55,7 +53,7 @@ export default {
     date() {
       return format(new Date(this.thread.posted_at));
     },
-    ready() {
+    /*ready() {
       if (this.request_nonce == null) {
         return false;
       }
@@ -66,12 +64,18 @@ export default {
         return true;
       }
       return this.$store.state.requests[this.request_nonce] == "pending";
-    }
+    }*/
   },
-  mounted () {
+  async fetch() {
+    await this.$store.dispatch('thread_detail', this.pk);
+    /*store.dispatch('watch_board', route.params.pk).catch((err) => {
+      console.log("err");
+    });*/
+  },
+  /*mounted () {
     this.thread_detail(this.pk).then((nonce) => {
       this.request_nonce = nonce;
     });
-  }
+  }*/
 }
 </script>
